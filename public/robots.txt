@@ -1,3 +1,13 @@
-# https://www.robotstxt.org/robotstxt.html
+# HG Automation - Robots.txt
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow access to sensitive directories and files
+Disallow: /static/js/*.map
+Disallow: /static/css/*.map
+Disallow: /*.json$
+Disallow: /server/
+Disallow: /scripts/
+
+# Sitemap location (update with your domain)
+# Sitemap: https://yourdomain.com/sitemap.xml
