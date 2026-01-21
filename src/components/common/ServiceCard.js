@@ -49,18 +49,23 @@ const defaultIcon = (
   </svg>
 );
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, onClick }) => {
   const { title, shortDescription, icon, image } = service;
   const IconComponent = icons[icon] || defaultIcon;
 
   return (
-    <div className="group relative bg-white rounded-2xl h-full shadow-industrial
-                    hover:shadow-[0_20px_50px_rgba(45,160,212,0.2)] transition-all duration-500 ease-out
+    <div
+      className="group relative bg-white rounded-2xl h-full shadow-industrial
+                    hover:shadow-[0_20px_50px_rgba(45,160,212,0.2)] transition-all duration-700 ease-out
                     hover:-translate-y-3 border border-steel-100
-                    hover:border-accent/50 overflow-hidden">
+                    hover:border-accent/50 overflow-hidden cursor-pointer"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onClick?.()}>
 
       {/* Animated border gradient on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
         <div className="absolute inset-[-2px] rounded-2xl bg-gradient-to-r from-accent via-accent-light to-accent animate-spin-slow opacity-30"
              style={{ animationDuration: '4s' }} />
       </div>
@@ -68,7 +73,7 @@ const ServiceCard = ({ service }) => {
       {/* Corner accent */}
       <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden">
         <div className="absolute -top-10 -right-10 w-20 h-20 bg-accent/10 rounded-full
-                      group-hover:scale-150 group-hover:bg-accent/20 transition-all duration-700" />
+                      group-hover:scale-150 group-hover:bg-accent/20 transition-all duration-1000" />
       </div>
 
       {/* Image */}
@@ -76,19 +81,30 @@ const ServiceCard = ({ service }) => {
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
         />
 
         {/* Animated overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/70 via-primary-dark/20 to-transparent
-                      group-hover:from-primary-dark/80 transition-all duration-500" />
+                      group-hover:from-primary-dark/80 transition-all duration-700" />
 
         {/* Shine sweep effect on hover */}
         <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out
                       bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
 
+        {/* View Details overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-primary-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <span className="text-white font-semibold text-lg flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            View Details
+          </span>
+        </div>
+
         {/* Floating particles on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
           <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-accent rounded-full animate-float" style={{ animationDelay: '0s' }} />
           <div className="absolute top-8 right-8 w-1 h-1 bg-white/70 rounded-full animate-float" style={{ animationDelay: '0.3s' }} />
           <div className="absolute bottom-12 right-6 w-1 h-1 bg-accent/70 rounded-full animate-float" style={{ animationDelay: '0.6s' }} />
@@ -99,18 +115,18 @@ const ServiceCard = ({ service }) => {
                         flex items-center justify-center text-accent
                         shadow-lg group-hover:shadow-[0_8px_25px_rgba(45,160,212,0.4)]
                         group-hover:scale-110 group-hover:-translate-y-1
-                        transition-all duration-500 overflow-hidden">
+                        transition-all duration-700 overflow-hidden">
           {/* Icon glow */}
-          <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-500" />
           {/* Rotating border */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
             <div className="absolute inset-[-2px] rounded-xl animate-spin"
                  style={{
                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(45,160,212,0.5) 25%, transparent 50%)',
                    animationDuration: '2s'
                  }} />
           </div>
-          <div className="relative z-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+          <div className="relative z-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
             {IconComponent}
           </div>
         </div>
@@ -120,14 +136,14 @@ const ServiceCard = ({ service }) => {
       <div className="relative p-5">
         {/* Animated underline for title */}
         <div className="relative inline-block mb-2">
-          <h3 className="text-lg font-semibold text-primary-dark group-hover:text-accent transition-colors duration-300">
+          <h3 className="text-lg font-semibold text-primary-dark group-hover:text-accent transition-colors duration-500">
             {title}
           </h3>
-          <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-500" />
+          <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-700" />
         </div>
 
         <p className="text-steel-500 mb-4 leading-relaxed text-sm line-clamp-2
-                    group-hover:text-steel-600 transition-colors duration-300">
+                    group-hover:text-steel-600 transition-colors duration-500">
           {shortDescription}
         </p>
 
@@ -139,22 +155,22 @@ const ServiceCard = ({ service }) => {
         >
           <span className="relative z-10">Learn More</span>
           <div className="relative flex items-center">
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
             {/* Extra arrow that appears on hover */}
-            <svg className="w-4 h-4 absolute -right-4 opacity-0 group-hover:opacity-100 group-hover:right-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 absolute -right-4 opacity-0 group-hover:opacity-100 group-hover:right-0 transition-all duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </div>
           {/* Underline animation */}
-          <span className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover:w-full transition-all duration-300" />
+          <span className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover:w-full transition-all duration-500" />
         </a>
       </div>
 
       {/* Bottom accent bar */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent
-                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                    transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700" />
     </div>
   );
 };

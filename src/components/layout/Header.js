@@ -263,7 +263,7 @@ const Header = () => {
               </div>
 
               <p className="text-white/30 text-xs mt-6">
-                © 2024 HG Automation. All rights reserved.
+                © 2024 HG Automation India. All rights reserved.
               </p>
           </div>
         </div>

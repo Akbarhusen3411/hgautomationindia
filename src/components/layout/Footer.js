@@ -144,7 +144,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-12 pt-8 text-center">
           <p className="text-white/40 text-sm">
-            &copy; {currentYear} HG Automation. All rights reserved.
+            &copy; {currentYear} HG Automation India. All rights reserved.
           </p>
         </div>
       </div>

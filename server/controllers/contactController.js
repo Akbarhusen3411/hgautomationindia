@@ -4,12 +4,13 @@
  */
 
 const { contactSubmissions } = require('../data/services');
+const { sendContactNotification, sendAutoReply } = require('../services/emailService');
 
 /**
  * Submit contact form
  * @route POST /api/contact
  */
-const submitContact = (req, res) => {
+const submitContact = async (req, res) => {
   const { name, email, phone, company, subject, message } = req.body;
 
   // Create submission record
@@ -29,6 +30,22 @@ const submitContact = (req, res) => {
   contactSubmissions.push(submission);
 
   console.log('New contact submission:', submission);
+
+  // Send email notification to admin
+  try {
+    await sendContactNotification(submission);
+    console.log('Email notification sent to admin');
+  } catch (emailError) {
+    console.error('Failed to send admin notification:', emailError.message);
+  }
+
+  // Send auto-reply to customer
+  try {
+    await sendAutoReply(submission);
+    console.log('Auto-reply sent to customer');
+  } catch (emailError) {
+    console.error('Failed to send auto-reply:', emailError.message);
+  }
 
   res.status(201).json({
     success: true,
