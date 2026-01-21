@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm start)",
+      "Bash(timeout:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 20; Get-Content ''C:\\\\Users\\\\Win10\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\E--Company-Web-hg-automation-web\\\\tasks\\\\bdb13e0.output''\")"
+    ]
+  }
+}
