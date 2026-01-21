@@ -21,7 +21,7 @@ const SecurityProvider = ({ children }) => {
     console.log('%c⚠️ STOP!', warningStyle);
     console.log('%cThis browser feature is intended for developers.', infoStyle);
     console.log('%cIf someone told you to copy-paste something here, it is a scam.', infoStyle);
-    console.log('%c© HG Automation - All Rights Reserved', 'color: #e67e22; font-size: 12px;');
+    console.log('%c© HG Automation India - All Rights Reserved', 'color: #e67e22; font-size: 12px;');
 
     // Disable right-click context menu
     const handleContextMenu = (e) => {
