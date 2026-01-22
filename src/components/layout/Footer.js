@@ -1,13 +1,15 @@
 /**
  * Footer Component
- * Dark footer with logo and links
+ * Dark footer with logo, links, and animations
  */
 
 import React from 'react';
-import logoImage from '../../images/Logo.png';
+import Logo from '../common/Logo';
+import useScrollAnimation from '../../hooks/useScrollAnimation';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [footerRef, isVisible] = useScrollAnimation({ threshold: 0.1 });
 
   const quickLinks = [
     { label: 'Home', href: '#home' },
@@ -36,12 +38,20 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-primary-dark border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer ref={footerRef} className="bg-primary-dark border-t border-white/10 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-industrial-pattern opacity-5" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
-          <div className="lg:col-span-1">
-            <img src={logoImage} alt="HG Automation" className="h-10 w-auto mb-6" />
+          <div className={`lg:col-span-1 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* Premium Logo with animations */}
+            <div className="mb-6">
+              <Logo size="default" showText={true} />
+            </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               Leading provider of industrial automation solutions. Transforming manufacturing
               with innovative PLC programming and SCADA systems.
@@ -77,7 +87,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h5 className="text-white font-semibold mb-5">Quick Links</h5>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
@@ -85,7 +95,7 @@ const Footer = () => {
                   <a
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className="text-white/60 hover:text-accent transition-colors text-sm"
+                    className="text-white/60 hover:text-accent transition-colors text-sm animated-underline inline-block"
                   >
                     {link.label}
                   </a>
@@ -95,7 +105,7 @@ const Footer = () => {
           </div>
 
           {/* Services */}
-          <div>
+          <div className={`transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h5 className="text-white font-semibold mb-5">Our Services</h5>
             <ul className="space-y-3">
               {serviceLinks.map((link) => (
@@ -103,7 +113,7 @@ const Footer = () => {
                   <a
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className="text-white/60 hover:text-accent transition-colors text-sm"
+                    className="text-white/60 hover:text-accent transition-colors text-sm animated-underline inline-block"
                   >
                     {link.label}
                   </a>
@@ -113,7 +123,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className={`transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h5 className="text-white font-semibold mb-5">Contact Us</h5>
             <ul className="space-y-3 text-sm text-white/60">
               <li className="font-medium text-white">Bakarali Momin</li>
@@ -141,11 +151,63 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Map Section */}
+        <div className={`mt-12 transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+            {/* Map Info */}
+            <div className="lg:w-1/3 bg-white/5 rounded-xl p-6 border border-white/10">
+              <h5 className="text-white font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Our Location
+              </h5>
+              <p className="text-white/60 text-sm mb-4">
+                Visit us at our facility in Gujarat, India. We're always happy to meet with clients and discuss your automation needs.
+              </p>
+              <div className="text-white/80 text-sm">
+                <p className="font-medium text-accent">HG Automation India</p>
+                <p>Building No. 70, Mominvad</p>
+                <p>Vaso, Kheda, Gujarat 387710</p>
+              </div>
+            </div>
+
+            {/* Google Map */}
+            <div className="lg:w-2/3 rounded-xl overflow-hidden border border-white/10 h-[200px] lg:h-auto">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.9!2d72.85!3d22.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e5c5b5b5b5b5b%3A0x5b5b5b5b5b5b5b5b!2sVaso%2C%20Gujarat%20387710!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0, minHeight: '200px' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="HG Automation Location"
+                className="w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 mt-12 pt-8 text-center">
+        <div className={`border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <p className="text-white/40 text-sm">
             &copy; {currentYear} HG Automation India. All rights reserved.
           </p>
+
+          {/* Scroll to Top Button */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-accent rounded-full
+                     text-white/60 hover:text-white text-sm transition-all duration-300
+                     border border-white/10 hover:border-accent"
+          >
+            <span>Back to Top</span>
+            <svg className="w-4 h-4 group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+          </button>
         </div>
       </div>
     </footer>

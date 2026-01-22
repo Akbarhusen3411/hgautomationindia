@@ -1,13 +1,19 @@
 /**
  * Hero Section Component
- * Industrial automation theme with animated logo
+ * Industrial automation theme with animated logo and counters
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import logoImage from '../../images/Logo.png';
+import useAnimatedCounter from '../../hooks/useAnimatedCounter';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const statsRef = useRef(null);
+
+  // Animated counters for stats
+  const yearsCounter = useAnimatedCounter('10+', 2000);
+  const projectsCounter = useAnimatedCounter('500+', 2500);
 
   useEffect(() => {
     setIsVisible(true);
@@ -74,25 +80,35 @@ const Hero = () => {
                 onClick={() => scrollToSection('contact')}
                 className="btn-outline flex items-center gap-2"
               >
-                Get a Quote
+                Free Consultation
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 pt-8 border-t border-white/10">
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-accent">10+</div>
+            {/* Stats with Animated Counters */}
+            <div ref={statsRef} className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 pt-8 border-t border-white/10">
+              <div ref={yearsCounter.ref} className="group">
+                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
+                  {yearsCounter.count}
+                </div>
                 <div className="text-xs sm:text-sm text-white/60 mt-1">Years Experience</div>
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-accent">500+</div>
+              <div ref={projectsCounter.ref} className="group">
+                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
+                  {projectsCounter.count}
+                </div>
                 <div className="text-xs sm:text-sm text-white/60 mt-1">Projects Done</div>
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-accent">24/7</div>
+              <div className="group">
+                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center lg:justify-start gap-2">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                  </span>
+                  24/7
+                </div>
                 <div className="text-xs sm:text-sm text-white/60 mt-1">Support</div>
               </div>
             </div>

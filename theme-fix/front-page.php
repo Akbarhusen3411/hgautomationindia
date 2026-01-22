@@ -85,13 +85,27 @@ get_header();
                     <!-- Logo wrapper -->
                     <div class="hero-logo-wrapper">
                         <?php if (has_custom_logo()): ?>
-                            <?php
-                            $custom_logo_id = get_theme_mod('custom_logo');
-                            $logo_url = wp_get_attachment_image_url($custom_logo_id, 'full');
-                            ?>
-                            <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo('name'); ?>">
+                            <?php the_custom_logo(); ?>
                         <?php else: ?>
-                            <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Logo.png" alt="<?php bloginfo('name'); ?>">
+                            <div class="logo-svg-fallback hero-svg-logo">
+                                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="heroLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#1e293b"/>
+                                            <stop offset="100%" style="stop-color:#0f172a"/>
+                                        </linearGradient>
+                                        <filter id="heroGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                            <feMerge>
+                                                <feMergeNode in="coloredBlur"/>
+                                                <feMergeNode in="SourceGraphic"/>
+                                            </feMerge>
+                                        </filter>
+                                    </defs>
+                                    <path d="M60 10L105 35V85L60 110L15 85V35L60 10Z" fill="url(#heroLogoGrad)" stroke="#2da0d4" stroke-width="3" filter="url(#heroGlow)"/>
+                                    <text x="60" y="70" text-anchor="middle" fill="white" font-size="32" font-weight="bold" font-family="Arial, sans-serif">HG</text>
+                                </svg>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -121,20 +135,6 @@ get_header();
     <!-- Floating Shapes -->
     <div class="services-floating-shape shape-1"></div>
     <div class="services-floating-shape shape-2"></div>
-
-    <!-- Additional Floating Bubbles -->
-    <div class="services-bubble bubble-1"></div>
-    <div class="services-bubble bubble-2"></div>
-    <div class="services-bubble bubble-3"></div>
-    <div class="services-bubble bubble-4"></div>
-    <div class="services-bubble bubble-5"></div>
-    <div class="services-bubble bubble-6"></div>
-    <div class="services-bubble bubble-7"></div>
-    <div class="services-bubble bubble-8"></div>
-    <div class="services-bubble bubble-9"></div>
-    <div class="services-bubble bubble-10"></div>
-    <div class="services-bubble bubble-11"></div>
-    <div class="services-bubble bubble-12"></div>
 
     <!-- Grid Lines -->
     <div class="services-grid-line line-1"></div>
@@ -316,13 +316,20 @@ get_header();
                     <div class="about-logo-wrapper">
                         <div class="about-logo-glow"></div>
                         <?php if (has_custom_logo()): ?>
-                            <?php
-                            $custom_logo_id = get_theme_mod('custom_logo');
-                            $logo_url = wp_get_attachment_image_url($custom_logo_id, 'full');
-                            ?>
-                            <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo('name'); ?>">
+                            <?php the_custom_logo(); ?>
                         <?php else: ?>
-                            <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Logo.png" alt="<?php bloginfo('name'); ?>">
+                            <div class="logo-svg-fallback about-svg-logo">
+                                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="aboutLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#1e293b"/>
+                                            <stop offset="100%" style="stop-color:#0f172a"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M50 8L87.5 29.5V70.5L50 92L12.5 70.5V29.5L50 8Z" fill="url(#aboutLogoGrad)" stroke="#2da0d4" stroke-width="2.5"/>
+                                    <text x="50" y="58" text-anchor="middle" fill="white" font-size="26" font-weight="bold" font-family="Arial, sans-serif">HG</text>
+                                </svg>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -496,15 +503,17 @@ get_header();
 
             <!-- Contact Form -->
             <div class="contact-form-wrapper">
-                <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                    <span style="width: 2rem; height: 2rem; background: linear-gradient(135deg, #2da0d4, #1e7898); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                <div class="form-header">
+                    <div class="form-header-icon">
                         <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                    </span>
-                    <span>Send Us a Message</span>
-                </h3>
-                <p style="color: #64748b; font-size: 11px; margin-top: 0; margin-bottom: 1rem;">We'll get back to you within 24 hours</p>
+                    </div>
+                    <div>
+                        <h3>Send Us a Message</h3>
+                        <p>We'll get back to you within 24 hours</p>
+                    </div>
+                </div>
 
                 <div id="form-message"></div>
 
