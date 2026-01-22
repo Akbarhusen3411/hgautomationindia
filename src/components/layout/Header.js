@@ -1,39 +1,54 @@
 /**
  * Header Component
- * Fixed navigation bar with full-screen mobile drawer
+ * Premium glassmorphism navigation with smooth animations
  */
 
-import React, { useState, useEffect } from 'react';
-import logoImage from '../../images/Logo.png';
+import React, { useState, useEffect, useCallback } from 'react';
+import Logo from '../common/Logo';
 
 const Header = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollDirection, setScrollDirection] = useState('up');
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const navItems = [
     { id: 'home', label: 'Home', icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
     )},
     { id: 'services', label: 'Services', icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     )},
     { id: 'about', label: 'About', icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     )},
     { id: 'contact', label: 'Contact', icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     )},
   ];
+
+  // Track mouse position for glow effect
+  const handleMouseMove = useCallback((e) => {
+    const header = document.getElementById('main-header');
+    if (header) {
+      const rect = header.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -48,10 +63,21 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
 
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setScrollDirection('down');
+      } else {
+        setScrollDirection('up');
+      }
+      setLastScrollY(currentScrollY);
+
+      setIsScrolled(currentScrollY > 20);
+
+      // Update active section
       const sections = navItems.map(item => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = currentScrollY + 100;
 
       sections.forEach((section, index) => {
         if (section) {
@@ -64,9 +90,9 @@ const Header = () => {
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -81,190 +107,270 @@ const Header = () => {
 
   return (
     <>
+      {/* Main Header - Always Sticky */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
-          bg-gradient-to-r from-primary-dark via-primary to-primary-light
-          ${isScrolled ? 'shadow-industrial-lg' : ''}`}
+        id="main-header"
+        onMouseMove={handleMouseMove}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out group/header
+          ${isScrolled ? 'py-2' : 'py-3'}`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        {/* Dark Glassmorphism Background - Works on both light and dark backgrounds */}
+        <div className={`absolute inset-0 transition-all duration-500
+          ${isScrolled
+            ? 'bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]'
+            : 'bg-slate-900/60 backdrop-blur-lg border-b border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]'
+          }
+          group-hover/header:bg-slate-900/90 group-hover/header:backdrop-blur-2xl group-hover/header:border-white/20
+          group-hover/header:shadow-[0_12px_40px_rgba(0,0,0,0.4)]`}
+        >
+          {/* Glass refraction effect - subtle gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-cyan-500/5 opacity-50" />
+
+          {/* Animated gradient border at bottom */}
+          <div className={`absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent
+            transition-all duration-500 ${isScrolled ? 'opacity-100' : 'opacity-50'} group-hover/header:via-accent/70`}
+          />
+
+          {/* Subtle top highlight for depth */}
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Mouse follow glow effect */}
+          <div
+            className="absolute w-[500px] h-[500px] rounded-full pointer-events-none transition-opacity duration-500 opacity-0 group-hover/header:opacity-100"
+            style={{
+              left: mousePosition.x - 250,
+              top: mousePosition.y - 250,
+              background: 'radial-gradient(circle, rgba(45,160,212,0.15) 0%, transparent 50%)',
+            }}
+          />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+
+            {/* Logo Section */}
             <a
               href="#home"
               onClick={(e) => {
                 e.preventDefault();
                 scrollToSection('home');
               }}
-              className="flex-shrink-0 z-50 flex items-center gap-3"
+              className="flex-shrink-0 z-50"
             >
-              <div className={`relative ${isMenuOpen ? 'hidden' : 'block'} md:block group/logo cursor-pointer`}>
-                {/* Orbiting dot */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_rgba(45,160,212,0.8)] animate-orbitHeader" />
-                </div>
-
-                {/* Outer glow ring on hover */}
-                <div className="absolute -inset-3 rounded-full opacity-0 group-hover/logo:opacity-100 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full border border-accent/40" />
-                  <div className="absolute inset-1 rounded-full border border-accent/20" />
-                </div>
-
-                {/* Rotating gradient ring */}
-                <div className="absolute -inset-1 rounded-full animate-spin" style={{ animationDuration: '10s' }}>
-                  <svg className="w-full h-full" viewBox="0 0 50 50">
-                    <defs>
-                      <linearGradient id="headerRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="rgba(45,160,212,0)" />
-                        <stop offset="50%" stopColor="rgba(45,160,212,0.8)" />
-                        <stop offset="100%" stopColor="rgba(45,160,212,0)" />
-                      </linearGradient>
-                    </defs>
-                    <circle cx="25" cy="25" r="23" fill="none" stroke="url(#headerRingGrad)" strokeWidth="1" />
-                  </svg>
-                </div>
-
-                {/* Breathing glow background */}
-                <div className="absolute -inset-0.5 bg-accent/25 rounded-full blur-md animate-pulse" style={{ animationDuration: '2.5s' }} />
-
-                {/* Logo container */}
-                <div className="relative">
-                  <img src={logoImage} alt="HG Automation"
-                       className="relative h-10 sm:h-12 w-auto animate-logoHeaderPulse
-                                  group-hover/logo:scale-110 transition-transform duration-300" />
-                </div>
-
-                {/* Hover ripple effect */}
-                <div className="absolute inset-0 rounded-full border border-accent/0 group-hover/logo:border-accent/50
-                               group-hover/logo:scale-150 transition-all duration-700 opacity-0 group-hover/logo:opacity-100" />
-              </div>
-              <div className={`${isMenuOpen ? 'hidden' : 'block'} md:block`}>
-                <h1 className="text-white font-bold text-sm sm:text-lg leading-tight tracking-wide">HG <span style={{ color: '#2da0d4' }}>AUTOMATION</span></h1>
-                <p className="text-white/70 text-[8px] sm:text-[10px] tracking-widest uppercase">Precision Control. Optimized Performance</p>
-              </div>
+              <Logo size="small" showText={!isMenuOpen} />
             </a>
 
-            <nav className="hidden md:flex items-center space-x-1">
-              {navItems.map(item => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(item.id);
-                  }}
-                  className={`relative px-5 py-2 text-sm font-medium rounded-md transition-all duration-200
-                    ${activeSection === item.id
-                      ? 'text-white bg-white/10'
-                      : 'text-white/80 hover:text-white hover:bg-white/5'
-                    }`}
-                >
-                  {item.label}
-                  <span
-                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-accent transition-all duration-300
-                      ${activeSection === item.id ? 'w-4/5' : 'w-0'}`}
-                  />
-                </a>
-              ))}
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center">
+              {/* Navigation Pills Container - Dark Glass Effect */}
+              <div className="flex items-center gap-1 p-1.5 rounded-full bg-white/5 border border-white/10
+                            backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+                {navItems.map((item, index) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(item.id);
+                    }}
+                    className={`relative px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300
+                      ${activeSection === item.id
+                        ? 'text-white'
+                        : 'text-white/70 hover:text-white'
+                      }`}
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    {/* Active background pill - Glass with subtle accent */}
+                    {activeSection === item.id && (
+                      <span className="absolute inset-0 rounded-full bg-accent/20 border border-accent/30
+                                     shadow-[0_4px_15px_rgba(45,160,212,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]
+                                     backdrop-blur-xl animate-scale-in" />
+                    )}
+
+                    {/* Hover glow */}
+                    <span className={`absolute inset-0 rounded-full transition-all duration-300
+                      ${activeSection === item.id
+                        ? 'opacity-0'
+                        : 'bg-transparent hover:bg-white/10'}`} />
+
+                    {/* Label */}
+                    <span className="relative z-10">{item.label}</span>
+
+                    {/* Underline indicator */}
+                    <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-accent rounded-full transition-all duration-300
+                      ${activeSection === item.id ? 'w-0' : 'w-0 group-hover:w-4'}`} />
+                  </a>
+                ))}
+              </div>
+
+              {/* CTA Button - Accent Glass */}
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection('contact');
+                }}
+                className="ml-4 relative group/btn overflow-hidden px-6 py-2.5 rounded-full
+                         bg-accent/20 border border-accent/40 text-white text-sm font-semibold
+                         backdrop-blur-md
+                         hover:bg-accent hover:border-accent
+                         hover:shadow-[0_8px_25px_rgba(45,160,212,0.4)]
+                         hover:-translate-y-0.5 transition-all duration-500"
+              >
+                {/* Inner glow */}
+                <span className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                {/* Shine effect */}
+                <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700
+                               bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
+                <span className="relative flex items-center gap-2">
+                  Get Quote
+                  <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </a>
             </nav>
 
+            {/* Mobile Menu Button - Glass with accent */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden relative z-50 w-12 h-12 flex items-center justify-center
-                       rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-300"
+                       rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm
+                       hover:bg-accent/20 hover:border-accent/30
+                       active:bg-accent/30 transition-all duration-300
+                       group"
               aria-label="Toggle menu"
             >
               <div className="w-6 h-5 flex flex-col justify-between">
-                <span className={`block h-0.5 bg-white rounded-full transition-all duration-300 origin-center
-                  ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                <span className={`block h-0.5 bg-white rounded-full transition-all duration-300
-                  ${isMenuOpen ? 'opacity-0 scale-0' : ''}`} />
-                <span className={`block h-0.5 bg-white rounded-full transition-all duration-300 origin-center
-                  ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                <span className={`block h-0.5 rounded-full transition-all duration-300 origin-center
+                  ${isMenuOpen
+                    ? 'rotate-45 translate-y-[9px] bg-accent w-full'
+                    : 'bg-white/80 group-hover:bg-accent w-full'}`}
+                />
+                <span className={`block h-0.5 bg-white/80 rounded-full transition-all duration-300
+                  ${isMenuOpen
+                    ? 'opacity-0 scale-0'
+                    : 'group-hover:bg-accent w-3/4'}`}
+                />
+                <span className={`block h-0.5 rounded-full transition-all duration-300 origin-center
+                  ${isMenuOpen
+                    ? '-rotate-45 -translate-y-[9px] bg-accent w-full'
+                    : 'bg-white/80 group-hover:bg-accent w-1/2 ml-auto'}`}
+                />
               </div>
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Menu Overlay - Optimized for Physical Devices */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-500
-          ${isMenuOpen ? 'visible' : 'invisible'}`}
+        className={`fixed inset-0 z-40 md:hidden
+          ${isMenuOpen ? 'visible' : 'invisible pointer-events-none'}`}
+        style={{ willChange: 'visibility' }}
       >
+        {/* Solid backdrop - NO blur for performance */}
         <div
-          className={`absolute inset-0 bg-primary-dark/95 backdrop-blur-lg transition-opacity duration-500
-            ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 bg-primary-dark transition-opacity duration-200 ease-out
+            ${isMenuOpen ? 'opacity-[0.97]' : 'opacity-0'}`}
+          style={{ willChange: 'opacity' }}
           onClick={() => setIsMenuOpen(false)}
         />
 
-        <div
-          className={`absolute inset-0 transition-all duration-500
-            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}
-        >
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-20 -right-20 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 -left-20 w-64 h-64 bg-primary-light/20 rounded-full blur-3xl" />
-          </div>
+        {/* Simple gradient overlay instead of blur */}
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-200
+          ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          style={{
+            background: 'radial-gradient(circle at 80% 20%, rgba(45,160,212,0.15) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(34,211,238,0.1) 0%, transparent 50%)',
+            willChange: 'opacity'
+          }}
+        />
 
-          {/* Centered navigation - accounting for header (80px) and footer space */}
-          <div className="absolute inset-0 flex items-center justify-center pt-20 pb-32 px-8">
-            <nav className="w-full max-w-sm space-y-3">
-              {navItems.map((item, index) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(item.id);
-                  }}
-                  className={`group flex items-center gap-3 p-3 rounded-xl transition-all duration-500
+        {/* Menu Content - GPU accelerated */}
+        <div
+          className={`absolute inset-0 flex flex-col justify-center px-6 transition-transform duration-200 ease-out
+            ${isMenuOpen ? 'translate-y-0' : '-translate-y-4'}`}
+          style={{ willChange: 'transform' }}
+        >
+          {/* Navigation Links with Icons - Glass with accent */}
+          <nav className="space-y-3 max-w-sm mx-auto w-full">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.id);
+                }}
+                className={`group relative flex items-center justify-between p-4 rounded-2xl border backdrop-blur-sm
+                  ${activeSection === item.id
+                    ? 'bg-accent/20 border-accent/40 shadow-[0_4px_20px_rgba(45,160,212,0.2)]'
+                    : 'bg-white/5 border-white/10 active:bg-white/15'
+                  }`}
+              >
+                {/* Active indicator line - accent */}
+                {activeSection === item.id && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-accent rounded-r-full shadow-[0_0_10px_rgba(45,160,212,0.6)]" />
+                )}
+
+                <div className="flex items-center gap-4">
+                  {/* Icon - glass with accent */}
+                  <span className={`w-11 h-11 rounded-xl flex items-center justify-center backdrop-blur-sm
                     ${activeSection === item.id
-                      ? 'bg-accent text-white shadow-lg shadow-accent/30'
-                      : 'bg-white/5 text-white/80 hover:bg-white/10 hover:text-white'
-                    }
-                    ${isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
-                  style={{ transitionDelay: `${(index + 2) * 100}ms` }}
-                >
-                  <span className={`p-2 rounded-lg transition-all duration-300
-                    ${activeSection === item.id
-                      ? 'bg-white/20'
-                      : 'bg-white/5 group-hover:bg-white/10'
+                      ? 'bg-accent/30 text-white border border-accent/50'
+                      : 'bg-white/10 text-white/60 border border-white/10'
                     }`}>
                     {item.icon}
                   </span>
-                  <div className="flex-1">
-                    <span className="text-base font-semibold block">{item.label}</span>
-                    <span className="text-xs text-white/50">
-                      {item.id === 'home' && 'Back to top'}
-                      {item.id === 'services' && 'What we offer'}
-                      {item.id === 'about' && 'Our story'}
-                      {item.id === 'contact' && 'Get in touch'}
-                    </span>
-                  </div>
-                </a>
-              ))}
-            </nav>
+
+                  <span className={`text-lg font-semibold
+                    ${activeSection === item.id ? 'text-white' : 'text-white/80'}`}>
+                    {item.label}
+                  </span>
+                </div>
+
+                {/* Arrow */}
+                <svg className={`w-5 h-5 ${activeSection === item.id ? 'text-accent' : 'text-white/30'}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </nav>
+
+          {/* Contact Actions - Glass with accent for mobile */}
+          <div className="flex justify-center gap-4 mt-10">
+            <a
+              href="tel:+918320049749"
+              className="flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 border border-white/20
+                       text-white active:bg-accent/30 backdrop-blur-sm
+                       hover:bg-accent/20 hover:border-accent/30 transition-all duration-300"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span className="text-sm font-semibold">Call</span>
+            </a>
+            <a
+              href="mailto:bakarali@hgautomationindia.com"
+              className="flex items-center gap-2 px-5 py-3 rounded-full bg-accent/30 border border-accent/50
+                       text-white active:bg-accent/50 backdrop-blur-sm
+                       hover:bg-accent hover:border-accent transition-all duration-300
+                       shadow-[0_4px_15px_rgba(45,160,212,0.3)]"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="text-sm font-semibold">Email</span>
+            </a>
           </div>
 
-          {/* Footer section - fixed at bottom */}
-          <div className={`absolute bottom-0 left-0 right-0 pb-6 pt-4 text-center transition-all duration-700 delay-500
-            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className="flex items-center justify-center gap-6 mb-6">
-                <a href="tel:+918320049749" className="flex items-center gap-2 text-white/60 hover:text-accent transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <span className="text-sm">Call Us</span>
-                </a>
-                <a href="mailto:bakarali@hgautomationindia.com" className="flex items-center gap-2 text-white/60 hover:text-accent transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-sm">Email Us</span>
-                </a>
-              </div>
-
-              <p className="text-white/30 text-xs mt-6">
-                © 2024 HG Automation India. All rights reserved.
-              </p>
+          {/* Footer - No delay */}
+          <div className="absolute bottom-8 left-0 right-0 text-center">
+            <p className="text-white/20 text-xs tracking-wider">
+              &copy; 2024 HG Automation India
+            </p>
           </div>
         </div>
       </div>

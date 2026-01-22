@@ -3,14 +3,21 @@
  * Professional dark gradient theme with attractive contact form
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { contactApi } from '../../services/api';
-import useScrollAnimation from '../../hooks/useScrollAnimation';
+import { ScrollReveal, StaggerContainer } from '../common/ScrollAnimation';
 
 const Contact = () => {
-  const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.2 });
-  const [infoRef, infoVisible] = useScrollAnimation({ threshold: 0.2 });
-  const [formRef, formVisible] = useScrollAnimation({ threshold: 0.1 });
+  const [scrollY, setScrollY] = useState(0);
+
+  // Parallax effect for background elements
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -167,125 +174,118 @@ const Contact = () => {
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-industrial-pattern opacity-20" />
 
-      {/* Animated Background Elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      {/* Animated Background Elements with Parallax */}
+      <div
+        className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"
+        style={{ transform: `translateY(${scrollY * 0.05}px)` }}
+      />
+      <div
+        className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse"
+        style={{ animationDelay: '1s', transform: `translateY(${scrollY * -0.03}px)` }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div
-          ref={headerRef}
-          className={`text-center mb-16 transition-all duration-700 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          <span className="inline-block px-4 py-2 bg-accent/20 text-accent rounded-full text-sm font-medium mb-4">
-            Contact Us
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Let's Start a <span className="text-accent">Conversation</span>
-          </h2>
-          <div className={`w-20 h-1 bg-accent mx-auto mb-6 rounded-full transition-all duration-700 delay-200 ${
-            headerVisible ? 'scale-x-100' : 'scale-x-0'
-          }`} />
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Ready to optimize your manufacturing processes? Contact us for a free
-            consultation and discover how our automation solutions can transform your operations.
-          </p>
+        {/* Section Header with Scroll Reveal */}
+        <div className="text-center mb-16">
+          <ScrollReveal animation="fade-down" duration={600}>
+            <span className="inline-block px-4 py-2 bg-accent/20 text-accent rounded-full text-sm font-medium mb-4">
+              Contact Us
+            </span>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={100} duration={700}>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Let's Start a <span className="text-accent">Conversation</span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="scale-up" delay={200} duration={600}>
+            <div className="w-20 h-1 bg-accent mx-auto mb-6 rounded-full" />
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={300} duration={700}>
+            <p className="text-white/70 text-lg max-w-2xl mx-auto">
+              Ready to optimize your manufacturing processes? Contact us for a free
+              consultation and discover how our automation solutions can transform your operations.
+            </p>
+          </ScrollReveal>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-12">
           {/* Contact Info */}
-          <div
-            ref={infoRef}
-            className={`lg:col-span-2 transition-all duration-700 ${
-              infoVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
-          >
-            <div className="space-y-3">
-              {contactInfo.map((item, index) => (
-                <div
-                  key={index}
-                  className={`group relative transition-all duration-500 ${
-                    infoVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-                  }`}
-                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
-                >
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10
-                                hover:bg-white/10 hover:border-accent/30 transition-all duration-300 hover:translate-x-2">
-                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-accent to-accent-dark rounded-lg
-                                  flex items-center justify-center text-white shadow-md shadow-accent/20
-                                  group-hover:scale-105 transition-transform duration-300">
-                      <span className="[&>svg]:w-5 [&>svg]:h-5">{item.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] text-accent uppercase tracking-wider font-semibold block">
-                        {item.label}
-                      </span>
-                      {item.href ? (
-                        <a href={item.href} className="text-white hover:text-accent transition-colors text-sm font-medium truncate block">
-                          {item.value}
-                        </a>
-                      ) : (
-                        <span className="text-white text-sm font-medium block truncate">{item.value}</span>
-                      )}
-                      {item.subValue && (
-                        <span className="text-white/60 text-xs block truncate">{item.subValue}</span>
-                      )}
+          <div className="lg:col-span-2">
+            <ScrollReveal animation="fade-right" duration={600}>
+              <StaggerContainer animation="fade-up" staggerDelay={100} className="space-y-2">
+                {contactInfo.map((item, index) => (
+                  <div key={index} className="group relative">
+                    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10
+                                  hover:bg-white/10 hover:border-accent/30 transition-all duration-300 hover:translate-x-2">
+                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-accent to-accent-dark rounded-md
+                                    flex items-center justify-center text-white shadow-md shadow-accent/20
+                                    group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span className="[&>svg]:w-4 [&>svg]:h-4">{item.icon}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-[9px] text-accent uppercase tracking-wider font-semibold block leading-tight">
+                          {item.label}
+                        </span>
+                        {item.href ? (
+                          <a href={item.href} className="text-white hover:text-accent transition-colors text-[13px] font-medium truncate block">
+                            {item.value}
+                          </a>
+                        ) : (
+                          <span className="text-white text-[13px] font-medium block truncate">{item.value}</span>
+                        )}
+                        {item.subValue && (
+                          <span className="text-white/60 text-[11px] block truncate">{item.subValue}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </StaggerContainer>
+            </ScrollReveal>
 
             {/* Social Links / Quick Actions */}
-            <div className={`mt-5 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 transition-all duration-700 ${
-              infoVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`} style={{ transitionDelay: '500ms' }}>
-              <h4 className="text-white font-medium text-sm mb-3">Quick Connect</h4>
-              <div className="flex gap-2">
-                <a href="https://wa.me/918320049749" target="_blank" rel="noopener noreferrer"
-                   className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-green-500 hover:bg-green-600
-                            text-white text-sm rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/30">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                  <span className="font-medium">WhatsApp</span>
-                </a>
-                <a href="tel:+918320049749"
-                   className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-accent hover:bg-accent-dark
-                            text-white text-sm rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/30">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <span className="font-medium">Call Us</span>
-                </a>
+            <ScrollReveal animation="fade-up" delay={500} duration={700}>
+              <div className="mt-3 p-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10">
+                <h4 className="text-white font-medium text-[13px] mb-2">Quick Connect</h4>
+                <div className="flex gap-2">
+                  <a href="https://wa.me/918320049749" target="_blank" rel="noopener noreferrer"
+                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-green-500 hover:bg-green-600
+                              text-white text-[13px] rounded-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/30">
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span className="font-medium">WhatsApp</span>
+                  </a>
+                  <a href="tel:+918320049749"
+                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-accent hover:bg-accent-dark
+                              text-white text-[13px] rounded-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/30">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <span className="font-medium">Call Us</span>
+                  </a>
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
 
           {/* Contact Form */}
-          <div
-            ref={formRef}
-            className={`lg:col-span-3 transition-all duration-700 ${
-              formVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}
-          >
-            <div className="contact-form-card bg-white rounded-2xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
+          <ScrollReveal animation="fade-left" delay={200} duration={800} className="lg:col-span-3">
+            <div className="contact-form-card bg-white rounded-xl p-4 md:p-5 shadow-2xl relative overflow-hidden">
               {/* Decorative Elements */}
               <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-full" />
               <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-primary/5 to-transparent rounded-tr-full" />
 
               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center shadow-md shadow-accent/30">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-9 h-9 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center shadow-md shadow-accent/30">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-primary-dark">Send Us a Message</h3>
-                    <p className="text-steel-500 text-xs">We'll get back to you within 24 hours</p>
+                    <h3 className="text-lg font-bold text-primary-dark">Send Us a Message</h3>
+                    <p className="text-steel-500 text-[11px]">We'll get back to you within 24 hours</p>
                   </div>
                 </div>
 
@@ -324,7 +324,7 @@ const Contact = () => {
                 )}
 
                 <form onSubmit={handleSubmit} noValidate>
-                  <div className="grid md:grid-cols-2 gap-3">
+                  <div className="grid md:grid-cols-2 gap-2.5">
                     {/* Dynamic Form Fields */}
                     {formFields.map((field) => (
                       <div key={field.name} className="form-field-group">
@@ -415,7 +415,7 @@ const Contact = () => {
                           onChange={handleChange}
                           onFocus={() => setFocusedField('message')}
                           onBlur={() => setFocusedField(null)}
-                          rows={4}
+                          rows={3}
                           className="form-textarea-field"
                           placeholder="Tell us about your project requirements, automation needs, or any questions you have..."
                           disabled={loading}
@@ -469,7 +469,7 @@ const Contact = () => {
                 </form>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

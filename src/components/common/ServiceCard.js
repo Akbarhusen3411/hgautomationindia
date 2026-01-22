@@ -1,9 +1,10 @@
 /**
  * ServiceCard Component
  * White card with hover effects for services
+ * Enhanced with 3D tilt and smooth animations
  */
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 const icons = {
   cpu: (
@@ -52,14 +53,48 @@ const defaultIcon = (
 const ServiceCard = ({ service, onClick }) => {
   const { title, shortDescription, icon, image } = service;
   const IconComponent = icons[icon] || defaultIcon;
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  // 3D tilt effect on mouse move
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = (y - centerY) / 20;
+    const tiltY = (centerX - x) / 20;
+    setTilt({ x: tiltX, y: tiltY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
   return (
     <div
-      className="group relative bg-white rounded-2xl h-full shadow-industrial
-                    hover:shadow-[0_20px_50px_rgba(45,160,212,0.2)] transition-all duration-700 ease-out
+      ref={cardRef}
+      className="group relative bg-white rounded-2xl shadow-industrial
+                    hover:shadow-[0_25px_60px_rgba(45,160,212,0.25)] transition-all duration-700 ease-out
                     hover:-translate-y-3 border border-steel-100
-                    hover:border-accent/50 overflow-hidden cursor-pointer"
+                    hover:border-accent/50 overflow-hidden cursor-pointer
+                    flex flex-col h-[380px] w-full"
+      style={{
+        transform: isHovered ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-12px)` : 'perspective(1000px) rotateX(0) rotateY(0)',
+        transition: 'transform 0.3s ease-out, box-shadow 0.7s ease-out',
+      }}
       onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}>
@@ -76,8 +111,8 @@ const ServiceCard = ({ service, onClick }) => {
                       group-hover:scale-150 group-hover:bg-accent/20 transition-all duration-1000" />
       </div>
 
-      {/* Image */}
-      <div className="relative h-40 overflow-hidden">
+      {/* Image - Fixed height */}
+      <div className="relative h-[160px] min-h-[160px] overflow-hidden flex-shrink-0">
         <img
           src={image}
           alt={title}
@@ -132,26 +167,26 @@ const ServiceCard = ({ service, onClick }) => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative p-5">
+      {/* Content - Flex grow to fill remaining space */}
+      <div className="relative p-5 flex flex-col flex-grow">
         {/* Animated underline for title */}
         <div className="relative inline-block mb-2">
-          <h3 className="text-lg font-semibold text-primary-dark group-hover:text-accent transition-colors duration-500">
+          <h3 className="text-base font-semibold text-primary-dark group-hover:text-accent transition-colors duration-500 line-clamp-2">
             {title}
           </h3>
           <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-700" />
         </div>
 
-        <p className="text-steel-500 mb-4 leading-relaxed text-sm line-clamp-2
+        <p className="text-steel-500 leading-relaxed text-sm line-clamp-3 flex-grow
                     group-hover:text-steel-600 transition-colors duration-500">
           {shortDescription}
         </p>
 
-        {/* Learn more link with arrow animation */}
+        {/* Learn more link with arrow animation - pinned to bottom */}
         <a
           href="#contact"
           className="inline-flex items-center gap-2 text-accent font-medium text-sm
-                     relative overflow-hidden"
+                     relative overflow-hidden mt-4"
         >
           <span className="relative z-10">Learn More</span>
           <div className="relative flex items-center">

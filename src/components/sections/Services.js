@@ -1,17 +1,26 @@
 /**
  * Services Section Component
- * Displays automation services with animations and modal gallery
+ * Displays automation services with smooth scroll animations
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ServiceCard from '../common/ServiceCard';
 import ServiceModal from '../common/ServiceModal';
+import { ScrollReveal, StaggerContainer } from '../common/ScrollAnimation';
 
 const Services = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const sectionRef = useRef(null);
+  const [scrollY, setScrollY] = useState(0);
+
+  // Parallax effect for background elements
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const servicesData = [
     {
@@ -123,23 +132,6 @@ const Services = () => {
     },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   const scrollToContact = (e) => {
     e.preventDefault();
     const section = document.getElementById('contact');
@@ -163,7 +155,7 @@ const Services = () => {
 
   return (
     <>
-      <section id="services" ref={sectionRef} className="py-24 relative overflow-hidden">
+      <section id="services" className="py-24 relative overflow-hidden">
         {/* Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50"></div>
 
@@ -172,10 +164,19 @@ const Services = () => {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232da0d4' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }}></div>
 
-        {/* Decorative Gradient Orbs */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-accent/10 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 to-accent/10 rounded-full blur-3xl translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-blue-500/5 to-accent/10 rounded-full blur-3xl translate-y-1/2"></div>
+        {/* Decorative Gradient Orbs with Parallax */}
+        <div
+          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-accent/10 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+          style={{ transform: `translate(-50%, calc(-50% + ${scrollY * 0.1}px))` }}
+        ></div>
+        <div
+          className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 to-accent/10 rounded-full blur-3xl"
+          style={{ transform: `translate(33%, ${scrollY * -0.05}px)` }}
+        ></div>
+        <div
+          className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-blue-500/5 to-accent/10 rounded-full blur-3xl"
+          style={{ transform: `translateY(calc(50% + ${scrollY * 0.08}px))` }}
+        ></div>
 
         {/* Floating Geometric Shapes */}
         <div className="absolute top-20 right-20 w-20 h-20 border border-accent/20 rounded-2xl rotate-12 animate-float hidden lg:block" style={{ animationDuration: '6s' }}></div>
@@ -204,67 +205,67 @@ const Services = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Section Header */}
-          <div className={`text-center mb-16 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <span className="inline-block px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
-              What We Offer
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-dark mb-4">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500">Services</span>
-            </h2>
-            <div className={`w-20 h-1 bg-gradient-to-r from-accent to-cyan-500 mx-auto mb-6 rounded-full transition-all duration-700 delay-200 ${
-              isVisible ? 'scale-x-100' : 'scale-x-0'
-            }`} />
-            <p className="text-steel-500 text-lg max-w-2xl mx-auto">
-              Comprehensive industrial automation solutions tailored to optimize your
-              manufacturing processes and maximize operational efficiency.
-            </p>
+          {/* Section Header with Scroll Reveal */}
+          <div className="text-center mb-16">
+            <ScrollReveal animation="fade-down" duration={600}>
+              <span className="inline-block px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
+                What We Offer
+              </span>
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={100} duration={700}>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary-dark mb-4">
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500">Services</span>
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal animation="scale-up" delay={200} duration={600}>
+              <div className="w-20 h-1 bg-gradient-to-r from-accent to-cyan-500 mx-auto mb-6 rounded-full" />
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={300} duration={700}>
+              <p className="text-steel-500 text-lg max-w-2xl mx-auto">
+                Comprehensive industrial automation solutions tailored to optimize your
+                manufacturing processes and maximize operational efficiency.
+              </p>
+            </ScrollReveal>
           </div>
 
-          {/* Services - Horizontal scroll on mobile, Grid on desktop */}
+          {/* Services - Horizontal scroll on mobile, Grid on desktop with Stagger Animation */}
           <div className="services-scroll-container">
-            <div className="services-scroll-wrapper">
-              {servicesData.map((service, index) => (
-                <div
-                  key={service.id}
-                  className={`service-scroll-item transition-all duration-500 ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
+            <StaggerContainer animation="fade-up" staggerDelay={120} className="services-scroll-wrapper">
+              {servicesData.map((service) => (
+                <div key={service.id} className="service-scroll-item">
                   <ServiceCard service={service} onClick={() => openModal(service)} />
                 </div>
               ))}
-            </div>
+            </StaggerContainer>
             {/* Scroll indicator for mobile */}
-            <div className="scroll-indicator">
-              <span>Swipe to explore</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </div>
+            <ScrollReveal animation="fade-up" delay={800}>
+              <div className="scroll-indicator">
+                <span>Swipe to explore</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </ScrollReveal>
           </div>
 
-          {/* CTA */}
-          <div className={`text-center mt-16 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`} style={{ transitionDelay: '800ms' }}>
-            <p className="text-steel-500 mb-6">
-              Need a custom automation solution?
-            </p>
-            <a
-              href="#contact"
-              onClick={scrollToContact}
-              className="btn-primary inline-flex items-center gap-2 hover:scale-105 transition-transform"
-            >
-              Discuss Your Project
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </div>
+          {/* CTA with Scroll Reveal */}
+          <ScrollReveal animation="fade-up" delay={400} duration={700}>
+            <div className="text-center mt-16">
+              <p className="text-steel-500 mb-6">
+                Need a custom automation solution?
+              </p>
+              <a
+                href="#contact"
+                onClick={scrollToContact}
+                className="btn-primary inline-flex items-center gap-2 hover:scale-105 transition-transform group"
+              >
+                Discuss Your Project
+                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 

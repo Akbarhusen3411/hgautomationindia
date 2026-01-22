@@ -17,6 +17,7 @@ import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
 import Services from './components/sections/Services';
 import About from './components/sections/About';
+import Testimonials from './components/sections/Testimonials';
 import Contact from './components/sections/Contact';
 
 // Utility components
@@ -24,6 +25,7 @@ import SEO from './components/common/SEO';
 import WhatsAppButton from './components/common/WhatsAppButton';
 import CookieConsent from './components/common/CookieConsent';
 import GoogleAnalytics from './components/common/GoogleAnalytics';
+import ScrollProgress from './components/common/ScrollProgress';
 
 // Google Analytics Measurement ID - Replace with your actual ID
 const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
@@ -41,7 +43,10 @@ function App() {
       {/* Google Analytics */}
       <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
 
-      <div className="App min-h-screen flex flex-col">
+      {/* Scroll Progress Indicator */}
+      <ScrollProgress />
+
+      <div className="App min-h-screen flex flex-col page-enter">
         {/* Fixed navigation header */}
         <Header />
 
@@ -50,6 +55,7 @@ function App() {
           <Hero />
           <Services />
           <About />
+          <Testimonials />
           <Contact />
         </main>
 
