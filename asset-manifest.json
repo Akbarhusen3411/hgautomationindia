@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Industrial_Web/static/css/main.5a379507.css",
+    "main.js": "/Industrial_Web/static/js/main.6afe6ec8.js",
+    "static/js/206.de829588.chunk.js": "/Industrial_Web/static/js/206.de829588.chunk.js",
+    "static/media/Logo.png": "/Industrial_Web/static/media/Logo.d8c0fcfba2caf208f4b6.png",
+    "index.html": "/Industrial_Web/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.5a379507.css",
+    "static/js/main.6afe6ec8.js"
+  ]
+}
