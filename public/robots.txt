@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://akbarhusen3411.github.io/hgautomationindia/sitemap.xml
+Sitemap: https://www.hgautomationindia.com/sitemap.xml
