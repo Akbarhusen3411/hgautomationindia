@@ -13,10 +13,17 @@ const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
-  // Parallax effect for background elements
+  // Parallax effect for background elements (throttled with rAF)
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);

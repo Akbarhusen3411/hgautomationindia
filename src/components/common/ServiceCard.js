@@ -56,6 +56,7 @@ const ServiceCard = ({ service, onClick }) => {
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [ripple, setRipple] = useState(null);
 
   // 3D tilt effect on mouse move
   const handleMouseMove = (e) => {
@@ -79,6 +80,21 @@ const ServiceCard = ({ service, onClick }) => {
     setIsHovered(true);
   };
 
+  // Ripple effect on tap (mobile gets delay for visual feedback, desktop is instant)
+  const isTouchDevice = 'ontouchstart' in window;
+  const handleClick = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX || rect.width / 2) - rect.left;
+    const y = (e.clientY || rect.height / 2) - rect.top;
+    setRipple({ x, y, key: Date.now() });
+    if (isTouchDevice) {
+      setTimeout(() => onClick?.(), 250);
+    } else {
+      onClick?.();
+    }
+  };
+
   return (
     <div
       ref={cardRef}
@@ -86,18 +102,39 @@ const ServiceCard = ({ service, onClick }) => {
                     hover:shadow-[0_25px_60px_rgba(45,160,212,0.25)] transition-all duration-700 ease-out
                     hover:-translate-y-3 border border-steel-100
                     hover:border-accent/50 overflow-hidden cursor-pointer
-                    flex flex-col h-[380px] w-full"
+                    flex flex-col h-[380px] w-full
+                    active:scale-[0.97] md:active:scale-100"
       style={{
         transform: isHovered ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-12px)` : 'perspective(1000px) rotateX(0) rotateY(0)',
         transition: 'transform 0.3s ease-out, box-shadow 0.7s ease-out',
       }}
-      onClick={onClick}
+      onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick?.()}>
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}>
+
+      {/* Tap ripple effect */}
+      {ripple && (
+        <span
+          key={ripple.key}
+          className="absolute rounded-full bg-accent/20 pointer-events-none animate-ripple-out z-50"
+          style={{
+            left: ripple.x - 50,
+            top: ripple.y - 50,
+            width: 100,
+            height: 100,
+          }}
+          onAnimationEnd={() => setRipple(null)}
+        />
+      )}
 
       {/* Animated border gradient on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
@@ -116,6 +153,7 @@ const ServiceCard = ({ service, onClick }) => {
         <img
           src={image}
           alt={title}
+          loading="lazy"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
         />
 

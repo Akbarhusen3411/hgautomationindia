@@ -17,10 +17,12 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust first proxy (React dev server, Nginx, etc.)
+app.set('trust proxy', 1);
+
 // Security middleware - Helmet for HTTP headers
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  contentSecurityPolicy: false // Disable CSP for development
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 // Rate limiting - General API limit
@@ -41,8 +43,16 @@ const contactLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : ['http://localhost:3000'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
 app.use(generalLimiter);
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
