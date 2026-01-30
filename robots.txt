@@ -1,27 +1,4 @@
-# HG Automation - Robots.txt
-# https://www.hgautomationindia.com
-
 User-agent: *
 Allow: /
 
-# Disallow access to sensitive directories and files
-Disallow: /static/js/*.map
-Disallow: /static/css/*.map
-Disallow: /*.json$
-Disallow: /api/
-Disallow: /server/
-Disallow: /scripts/
-Disallow: /admin/
-
-# Sitemap location
 Sitemap: https://www.hgautomationindia.com/sitemap.xml
-
-# Allow Google to crawl everything
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-# Crawl-delay for polite crawling
-Crawl-delay: 10
