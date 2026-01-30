@@ -28,3 +28,7 @@ Thumbs.db
 
 # Optional cache
 .cache/
+
+# Binary/archive files
+*.zip
+*.bat
