@@ -24,6 +24,7 @@ Thumbs.db
 # Editor / IDE
 .vscode/
 .idea/
+.claude/
 
 # Optional cache
 .cache/
