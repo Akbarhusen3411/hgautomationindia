@@ -5,8 +5,9 @@
 
 import React from 'react';
 import logoImage from '../../images/Logo.png';
+import logoTransparent from '../../images/Logo-transparent.png';
 
-const Logo = ({ size = 'default', showText = true, className = '' }) => {
+const Logo = ({ size = 'default', showText = true, transparent = false, className = '' }) => {
   // Size configurations
   const sizes = {
     small: { icon: 'h-10 sm:h-11', text: 'text-lg sm:text-xl', tagline: 'text-[8px] sm:text-[9px]' },
@@ -37,14 +38,12 @@ const Logo = ({ size = 'default', showText = true, className = '' }) => {
                       transition-all duration-700 opacity-0 group-hover:opacity-100" />
 
         {/* Logo container with glass effect */}
-        <div className="relative p-1 rounded-full bg-white/5 border border-white/10
-                      group-hover:bg-accent/10 group-hover:border-accent/30
-                      group-hover:shadow-[0_0_30px_rgba(45,160,212,0.3)]
-                      transition-all duration-500 backdrop-blur-sm">
+        <div className={`relative transition-all duration-500
+                      ${transparent ? '' : 'p-1 rounded-full bg-white/5 border border-white/10 group-hover:bg-accent/10 group-hover:border-accent/30 group-hover:shadow-[0_0_30px_rgba(45,160,212,0.3)] backdrop-blur-sm'}`}>
 
           {/* The original logo image */}
           <img
-            src={logoImage}
+            src={transparent ? logoTransparent : logoImage}
             alt="HG Automation"
             className={`${iconSize} w-auto relative z-10
                        group-hover:scale-105 transition-all duration-500

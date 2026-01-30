@@ -155,9 +155,10 @@ const Header = () => {
                 e.preventDefault();
                 scrollToSection('home');
               }}
-              className="flex-shrink-0 z-50"
+              className={`flex-shrink-0 z-50 transition-all duration-300
+                ${isMenuOpen ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'}`}
             >
-              <Logo size="small" showText={!isMenuOpen} />
+              <Logo size="small" showText={true} />
             </a>
 
             {/* Desktop Navigation */}
@@ -294,7 +295,7 @@ const Header = () => {
         >
           {/* Navigation Links with Icons - Glass with accent */}
           <nav className="space-y-3 max-w-sm mx-auto w-full">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
@@ -303,10 +304,15 @@ const Header = () => {
                   scrollToSection(item.id);
                 }}
                 className={`group relative flex items-center justify-between p-4 rounded-2xl border backdrop-blur-sm
+                  transition-all duration-500 ease-out
+                  ${isMenuOpen
+                    ? 'opacity-100 translate-x-0'
+                    : 'opacity-0 -translate-x-8'}
                   ${activeSection === item.id
                     ? 'bg-accent/20 border-accent/40 shadow-[0_4px_20px_rgba(45,160,212,0.2)]'
                     : 'bg-white/5 border-white/10 active:bg-white/15'
                   }`}
+                style={{ transitionDelay: isMenuOpen ? `${index * 80 + 100}ms` : '0ms' }}
               >
                 {/* Active indicator line - accent */}
                 {activeSection === item.id && (
@@ -340,7 +346,10 @@ const Header = () => {
           </nav>
 
           {/* Contact Actions - Glass with accent for mobile */}
-          <div className="flex justify-center gap-4 mt-10">
+          <div className={`flex justify-center gap-4 mt-10 transition-all duration-500 ease-out
+            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{ transitionDelay: isMenuOpen ? `${navItems.length * 80 + 200}ms` : '0ms' }}
+          >
             <a
               href="tel:+918320049749"
               className="flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 border border-white/20
@@ -366,10 +375,13 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Footer - No delay */}
-          <div className="absolute bottom-8 left-0 right-0 text-center">
-            <p className="text-white/20 text-xs tracking-wider">
-              &copy; 2024 HG Automation India
+          {/* Footer */}
+          <div className={`absolute bottom-8 left-0 right-0 text-center transition-all duration-500 ease-out
+            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+            style={{ transitionDelay: isMenuOpen ? `${navItems.length * 80 + 300}ms` : '0ms' }}
+          >
+            <p className="text-white text-xs tracking-wider">
+              &copy; 2026 HG Automation India
             </p>
           </div>
         </div>
