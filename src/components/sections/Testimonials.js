@@ -46,7 +46,7 @@ const Testimonials = () => {
       role: 'Factory Owner',
       company: 'Singh Textiles',
       content: 'The control panel design and installation by HG Automation exceeded our expectations. Professional service, timely delivery, and excellent after-sales support. A trusted partner for automation needs.',
-      rating: 5,
+      rating: 4,
       image: null,
     },
     {
@@ -150,6 +150,7 @@ const Testimonials = () => {
           {/* Navigation Arrows */}
           <button
             onClick={goToPrev}
+            onKeyDown={(e) => e.key === ' ' && (e.preventDefault(), goToPrev())}
             className="carousel-arrow carousel-arrow-left"
             aria-label="Previous testimonial"
           >
@@ -160,6 +161,7 @@ const Testimonials = () => {
 
           <button
             onClick={goToNext}
+            onKeyDown={(e) => e.key === ' ' && (e.preventDefault(), goToNext())}
             className="carousel-arrow carousel-arrow-right"
             aria-label="Next testimonial"
           >

@@ -6,9 +6,6 @@
 
 import React from 'react';
 
-// Security Provider
-import SecurityProvider from './components/common/SecurityProvider';
-
 // Layout components
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -32,7 +29,15 @@ const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID || 'G-XXXXXXXX
 
 function App() {
   return (
-    <SecurityProvider>
+    <>
+      {/* Skip to main content - Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:outline-none"
+      >
+        Skip to main content
+      </a>
+
       {/* SEO Meta Tags */}
       <SEO
         title="HG Automation - Industrial Automation Solutions | PLC, SCADA, Control Panels"
@@ -51,7 +56,7 @@ function App() {
         <Header />
 
         {/* Main content sections */}
-        <main className="flex-1">
+        <main id="main-content" className="flex-1">
           <Hero />
           <Services />
           <About />
@@ -71,7 +76,7 @@ function App() {
         {/* Cookie Consent Banner */}
         <CookieConsent />
       </div>
-    </SecurityProvider>
+    </>
   );
 }
 

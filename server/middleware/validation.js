@@ -14,9 +14,7 @@ const contactValidationRules = [
     .notEmpty()
     .withMessage('Name is required')
     .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters')
-    .matches(/^[a-zA-Z\s'-]+$/)
-    .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+    .withMessage('Name must be between 2 and 100 characters'),
 
   body('email')
     .trim()
@@ -32,7 +30,14 @@ const contactValidationRules = [
     .matches(/^[\d\s\-\+\(\)]+$/)
     .withMessage('Please provide a valid phone number')
     .isLength({ min: 10, max: 20 })
-    .withMessage('Phone number must be between 10 and 20 characters'),
+    .withMessage('Phone number must be between 10 and 20 characters')
+    .custom((value) => {
+      const digitCount = (value.match(/\d/g) || []).length;
+      if (digitCount < 7) {
+        throw new Error('Phone number must contain at least 7 digits');
+      }
+      return true;
+    }),
 
   body('company')
     .optional({ checkFalsy: true })
@@ -51,8 +56,8 @@ const contactValidationRules = [
     .trim()
     .notEmpty()
     .withMessage('Message is required')
-    .isLength({ min: 20, max: 2000 })
-    .withMessage('Message must be between 20 and 2000 characters')
+    .isLength({ min: 10, max: 2000 })
+    .withMessage('Message must be between 10 and 2000 characters')
 ];
 
 /**
