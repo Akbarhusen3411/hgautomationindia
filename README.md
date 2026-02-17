@@ -1,6 +1,13 @@
 # HG Automation - Industrial Automation Website
 
-A professional single-page website for **HG Automation India** — an industrial automation company specializing in PLC programming, SCADA systems, HMI development, control panels, and Industry 4.0 integration. Built with **React 19 + Tailwind CSS 3** (frontend) and **Node.js + Express** (backend).
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19"/>
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS 3"/>
+  <img src="https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Deployed-GitHub_Pages-222?style=flat-square&logo=github-pages&logoColor=white" alt="GitHub Pages"/>
+</p>
+
+A professional single-page website for **[HG Automation India](https://akbarhusen3411.github.io/hgautomationindia)** — an industrial automation company specializing in PLC programming, SCADA systems, HMI development, control panels, and Industry 4.0 integration.
 
 ---
 
@@ -14,16 +21,15 @@ A professional single-page website for **HG Automation India** — an industrial
 
 ### Backend
 - Node.js, Express
-- Nodemailer (Gmail SMTP) for contact notifications
-- Twilio SMS for phone OTP verification
-- In-memory data storage (no database)
+- Nodemailer (Gmail SMTP) for contact form notifications
+- Express-validator for input sanitization
+- In-memory data storage
 
 ### Security & Build
 - JavaScript obfuscation with domain lock (production)
-- Helmet CSP headers
+- Helmet CSP headers, CORS, rate limiting
 - Source protection (DevTools, right-click, copy disabled in production)
 - Error boundary for graceful crash recovery
-- Rate limiting on all API endpoints
 
 ---
 
@@ -31,9 +37,9 @@ A professional single-page website for **HG Automation India** — an industrial
 
 - Responsive design optimized for mobile (402px+), tablet, and desktop
 - Animated hero section with 3D holographic logo display
-- Service cards with modal details, 3D tilt effects
+- Service cards with modal details and 3D tilt effects
 - Testimonials carousel with touch/swipe support
-- Contact form with dual OTP verification (email + phone)
+- Contact form with email notifications
 - Google Maps embed, WhatsApp floating button
 - Cookie consent with 6-month expiry
 - WCAG accessibility: skip links, aria-live, 44px touch targets
@@ -73,7 +79,7 @@ npm run deploy
 
 ```text
 hg_automation_web/
-├── public/                    # Static files, index.html
+├── public/                    # Static files, index.html, sitemap
 ├── src/
 │   ├── components/
 │   │   ├── common/            # ErrorBoundary, Logo, ServiceCard, ServiceModal,
@@ -83,25 +89,23 @@ hg_automation_web/
 │   │   └── sections/          # Hero, Services, About, Testimonials, Contact
 │   ├── hooks/                 # useAnimatedCounter, useScrollAnimation,
 │   │                            useScrollEffects, useSourceProtection
-│   ├── services/              # api.js (fetchApi, serviceApi, contactApi, otpApi)
+│   ├── services/              # api.js (fetchApi, serviceApi, contactApi)
 │   ├── data/                  # countries.js (dial codes for phone field)
 │   ├── utils/                 # smoothScroll.js
 │   ├── App.js                 # Main app with ErrorBoundary wrapper
-│   ├── App.test.js            # 4 render tests
 │   └── index.css              # Tailwind layers + custom animations
 ├── server/
-│   ├── controllers/           # serviceController, contactController, otpController
-│   ├── routes/                # serviceRoutes, contactRoutes, otpRoutes
-│   ├── services/              # emailService, otpService, smsService
+│   ├── controllers/           # serviceController, contactController
+│   ├── routes/                # serviceRoutes, contactRoutes
+│   ├── services/              # emailService
 │   ├── middleware/             # validation, errorHandler
-│   ├── data/                  # services.js (service data + in-memory store)
+│   ├── data/                  # services.js (service data)
 │   └── server.js              # Express entry point
 ├── scripts/
 │   ├── obfuscate.js           # Post-build JS obfuscation with domain lock
 │   └── set-version.js         # Injects version into build
 ├── package.json
 ├── tailwind.config.js
-├── CLAUDE.md                  # AI assistant instructions
 └── README.md
 ```
 
@@ -114,11 +118,7 @@ hg_automation_web/
 | GET | `/api/services` | All services (optional `?featured=true`) |
 | GET | `/api/services/:id` | Service by ID |
 | GET | `/api/services/summaries` | Service card summaries |
-| POST | `/api/otp/send-email` | Send email OTP |
-| POST | `/api/otp/verify-email` | Verify email OTP |
-| POST | `/api/otp/send-phone` | Send SMS OTP (Twilio) |
-| POST | `/api/otp/verify-phone` | Verify phone OTP |
-| POST | `/api/contact` | Submit contact form (requires OTP) |
+| POST | `/api/contact` | Submit contact form |
 | GET | `/api/health` | Health check |
 
 ---
@@ -133,45 +133,12 @@ REACT_APP_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 ### Backend (`server/.env`)
 ```
 PORT=5000
+NODE_ENV=development
 CORS_ORIGIN=http://localhost:3000
 EMAIL_USER=<gmail address>
 EMAIL_APP_PASSWORD=<gmail app password>
 CONTACT_EMAIL_RECIPIENT=<admin email>
-TWILIO_ACCOUNT_SID=<twilio sid>
-TWILIO_AUTH_TOKEN=<twilio token>
-TWILIO_PHONE_NUMBER=<twilio number>
-NODE_ENV=development
 ```
-
----
-
-## Latest Update — v1.0.3 (Feb 2026)
-
-### Security
-- Error boundary prevents blank page on component crashes
-- Source protection hook disables DevTools, right-click, copy in production
-- Image download protection via CSS
-- Server-side OTP enforcement on contact form (was UI-only)
-- PII logging suppressed in production
-- Helmet Content Security Policy headers added
-- Deploy uses obfuscated build with domain lock enabled
-- Removed unused `react-router-dom` dependency
-
-### Responsive
-- Hero buttons stack vertically on mobile, stats grid 2-col on small screens
-- About stats grid responsive (2-col mobile, 3-col tablet+)
-- Contact info labels bumped to minimum readable size (11px)
-- Reduced mobile gaps across Contact section, Footer grid
-- WCAG-compliant 44px touch targets on carousel and mobile dots
-- WhatsApp button optimized for mobile (52px, tighter positioning)
-- ServiceModal CTA buttons stack below 900px
-
-### Quality
-- `aria-live` regions on form success/error messages for screen readers
-- Cookie consent expires after 6 months, re-prompts user
-- Privacy policy link fixed (was returning 404)
-- Dead code removed from contact controller
-- Test suite fixed: IntersectionObserver mock + updated assertions, all 4 tests pass
 
 ---
 
