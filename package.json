@@ -1,6 +1,6 @@
 {
   "name": "hg_automation_web",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "homepage": "https://Akbarhusen3411.github.io/hgautomationindia",
   "proxy": "http://localhost:5000",
