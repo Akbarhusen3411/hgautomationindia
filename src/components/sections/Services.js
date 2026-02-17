@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import ServiceCard from '../common/ServiceCard';
 import ServiceModal from '../common/ServiceModal';
 import { ScrollReveal, StaggerContainer } from '../common/ScrollAnimation';
+import { scrollToElement } from '../../utils/smoothScroll';
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -140,13 +141,7 @@ const Services = () => {
 
   const scrollToContact = (e) => {
     e.preventDefault();
-    const section = document.getElementById('contact');
-    if (section) {
-      window.scrollTo({
-        top: section.offsetTop - 80,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElement('contact', 80);
   };
 
   const openModal = (service) => {
@@ -161,35 +156,42 @@ const Services = () => {
 
   return (
     <>
-      <section id="services" className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
-        {/* Dark gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-primary-dark"></div>
+      <section id="services" className="py-10 sm:py-16 lg:py-24 relative overflow-hidden">
+        {/* Top divider: Hero(dark) → Services(light) */}
+        <div className="section-divider-top dark-to-light"></div>
+        <div className="section-glow-top"></div>
+        {/* Bottom divider: Services(light) → About(dark) */}
+        <div className="section-divider-bottom light-to-dark"></div>
+        <div className="section-glow-bottom"></div>
+
+        {/* Light sky-blue gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-blue-50"></div>
 
         {/* Subtle grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
+        <div className="absolute inset-0 opacity-[0.06]" style={{
           backgroundImage: `
-            linear-gradient(rgba(45,160,212,0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(45,160,212,0.3) 1px, transparent 1px)
+            linear-gradient(rgba(45,160,212,0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45,160,212,0.15) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px'
         }}></div>
 
         {/* Gradient orbs with parallax */}
         <div
-          className="absolute top-0 left-0 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-br from-accent/10 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-0 left-0 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-br from-accent/8 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
           style={{ transform: `translate(-50%, calc(-50% + ${scrollY * 0.1}px))` }}
         ></div>
         <div
-          className="absolute top-1/2 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-bl from-primary/8 to-accent/10 rounded-full blur-3xl"
+          className="absolute top-1/2 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-bl from-sky-200/20 to-accent/8 rounded-full blur-3xl"
           style={{ transform: `translate(33%, ${scrollY * -0.05}px)` }}
         ></div>
         <div
-          className="absolute bottom-0 left-1/3 w-56 sm:w-72 h-56 sm:h-72 bg-gradient-to-tr from-accent/5 to-cyan-500/10 rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/3 w-56 sm:w-72 h-56 sm:h-72 bg-gradient-to-tr from-accent/5 to-sky-200/10 rounded-full blur-3xl"
           style={{ transform: `translateY(calc(50% + ${scrollY * 0.08}px))` }}
         ></div>
 
         {/* Circuit line decorations - left side */}
-        <div className="absolute top-24 left-0 w-48 opacity-20 pointer-events-none hidden lg:block">
+        <div className="absolute top-24 left-0 w-48 opacity-25 pointer-events-none hidden lg:block">
           <svg viewBox="0 0 200 300" fill="none" className="w-full">
             <path d="M0 40 L60 40 L60 100 L120 100" stroke="rgba(45,160,212,0.5)" strokeWidth="1" />
             <path d="M0 120 L40 120 L40 180 L100 180" stroke="rgba(45,160,212,0.4)" strokeWidth="1" />
@@ -201,7 +203,7 @@ const Services = () => {
         </div>
 
         {/* Circuit line decorations - right side */}
-        <div className="absolute top-40 right-0 w-48 opacity-20 pointer-events-none hidden lg:block">
+        <div className="absolute top-40 right-0 w-48 opacity-25 pointer-events-none hidden lg:block">
           <svg viewBox="0 0 200 300" fill="none" className="w-full">
             <path d="M200 60 L140 60 L140 120 L80 120" stroke="rgba(45,160,212,0.5)" strokeWidth="1" />
             <path d="M200 180 L160 180 L160 240 L100 240" stroke="rgba(45,160,212,0.4)" strokeWidth="1" />
@@ -211,7 +213,7 @@ const Services = () => {
         </div>
 
         {/* Chevron arrows decoration - right */}
-        <div className="absolute top-1/4 right-6 sm:right-12 opacity-15 pointer-events-none hidden md:flex flex-row gap-1">
+        <div className="absolute top-1/4 right-6 sm:right-12 opacity-20 pointer-events-none hidden md:flex flex-row gap-1">
           {[...Array(6)].map((_, i) => (
             <svg key={i} className="w-3 h-4 text-accent" fill="currentColor" viewBox="0 0 12 16" style={{ animationDelay: `${i * 0.1}s` }}>
               <path d="M2 0 L10 8 L2 16 L4 8 Z" opacity={1 - i * 0.12} />
@@ -220,12 +222,12 @@ const Services = () => {
         </div>
 
         {/* Dot grid patterns */}
-        <div className="absolute top-32 left-1/4 grid grid-cols-4 gap-2 opacity-10 pointer-events-none hidden lg:grid">
+        <div className="absolute top-32 left-1/4 grid grid-cols-4 gap-2 opacity-15 pointer-events-none hidden lg:grid">
           {[...Array(16)].map((_, i) => (
             <div key={i} className="w-1.5 h-1.5 bg-accent rounded-full" />
           ))}
         </div>
-        <div className="absolute bottom-32 right-1/4 grid grid-cols-3 gap-2 opacity-10 pointer-events-none hidden lg:grid">
+        <div className="absolute bottom-32 right-1/4 grid grid-cols-3 gap-2 opacity-15 pointer-events-none hidden lg:grid">
           {[...Array(9)].map((_, i) => (
             <div key={i} className="w-1.5 h-1.5 bg-accent rounded-full" />
           ))}
@@ -233,14 +235,14 @@ const Services = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
-          <div className="text-center mb-10 sm:mb-14 lg:mb-16">
+          <div className="text-center mb-6 sm:mb-10 lg:mb-14">
             <ScrollReveal animation="fade-down" duration={600}>
               <span className="inline-block px-4 py-2 bg-accent/10 border border-accent/20 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
                 What We Offer
               </span>
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={100} duration={700}>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary-dark mb-4">
                 Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">Services</span>
               </h2>
             </ScrollReveal>
@@ -248,7 +250,7 @@ const Services = () => {
               <div className="w-20 h-1 bg-gradient-to-r from-accent to-cyan-400 mx-auto mb-6 rounded-full" />
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={300} duration={700}>
-              <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
+              <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
                 Comprehensive industrial automation solutions tailored to optimize your
                 manufacturing processes and maximize operational efficiency.
               </p>
@@ -278,13 +280,13 @@ const Services = () => {
           {/* CTA */}
           <ScrollReveal animation="fade-up" delay={400} duration={700}>
             <div className="text-center mt-12 sm:mt-16">
-              <p className="text-slate-400 mb-6">
+              <p className="text-slate-600 mb-6">
                 Need a custom automation solution?
               </p>
               <a
                 href="#contact"
                 onClick={scrollToContact}
-                className="inline-flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/90
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-accent hover:bg-accent/90
                          text-white font-semibold rounded-lg border border-accent/50
                          hover:shadow-[0_0_30px_rgba(45,160,212,0.3)]
                          transition-all duration-300 group"

@@ -6,6 +6,7 @@
 import React from 'react';
 import Logo from '../common/Logo';
 import useScrollAnimation from '../../hooks/useScrollAnimation';
+import { scrollToElement, smoothScrollTo } from '../../utils/smoothScroll';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -28,13 +29,7 @@ const Footer = () => {
   const handleNavClick = (e, href) => {
     e.preventDefault();
     const sectionId = href.replace('#', '');
-    const section = document.getElementById(sectionId);
-    if (section) {
-      window.scrollTo({
-        top: section.offsetTop - 80,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElement(sectionId, 80);
   };
 
   return (
@@ -44,10 +39,10 @@ const Footer = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
           {/* Company Info */}
-          <div className={`lg:col-span-1 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`col-span-2 md:col-span-1 lg:col-span-1 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Premium Logo with animations */}
             <div className="mb-6">
               <Logo size="small" showText={true} />
@@ -159,7 +154,7 @@ const Footer = () => {
         <div className={`mt-12 transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="flex flex-col lg:flex-row gap-6 items-stretch">
             {/* Map Info */}
-            <div className="lg:w-1/3 bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="lg:w-1/3 bg-white/5 rounded-xl p-4 sm:p-6 border border-white/10">
               <h5 className="text-white font-semibold mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -202,7 +197,7 @@ const Footer = () => {
 
           {/* Scroll to Top Button */}
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => smoothScrollTo(0)}
             className="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-accent rounded-full
                      text-white/60 hover:text-white text-sm transition-all duration-300
                      border border-white/10 hover:border-accent"

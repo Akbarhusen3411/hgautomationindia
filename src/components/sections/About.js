@@ -102,7 +102,7 @@ const About = () => {
   };
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+    <section id="about" className="py-10 sm:py-16 lg:py-24 relative overflow-hidden">
       {/* Background — slightly different tone from Services */}
       <div className="absolute inset-0 bg-gradient-to-tl from-[#0a0f1e] via-[#0d1526] to-[#0f1a2e]"></div>
 
@@ -160,14 +160,14 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* ===== Centered Header ===== */}
-        <div className="text-center mb-10 sm:mb-14 lg:mb-16">
+        <div className="text-center mb-6 sm:mb-10 lg:mb-14">
           <ScrollReveal animation="fade-down" duration={600}>
             <span className="inline-block px-5 py-2 bg-accent/10 border border-accent/20 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
               About Us
             </span>
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={100} duration={700}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Engineering Excellence in{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">
                 Industrial Automation
@@ -178,7 +178,7 @@ const About = () => {
             <div className="w-20 h-1 bg-gradient-to-r from-accent to-cyan-400 mx-auto mb-6 rounded-full" />
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={300} duration={700}>
-            <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-slate-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
               Partnering with manufacturers across industries to design, implement, and maintain
               automation systems that drive productivity and reduce operational costs.
             </p>
@@ -186,7 +186,7 @@ const About = () => {
         </div>
 
         {/* ===== Two-column: Images + Text ===== */}
-        <div className="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-14 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-14 items-start">
 
           {/* Left: 4-Image Grid */}
           <div
@@ -249,7 +249,7 @@ const About = () => {
             <div className={`flex justify-center mt-5 sm:mt-6 transition-all duration-700 delay-700 ${
               imageVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}>
-              <div className="inline-flex items-center gap-4 bg-slate-800/60 border border-slate-700/40 rounded-xl px-5 py-3 sm:px-6 sm:py-4 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 sm:gap-4 bg-slate-800/60 border border-slate-700/40 rounded-xl px-4 py-2.5 sm:px-6 sm:py-4 backdrop-blur-sm">
                 <span className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">10+</span>
                 <div className="h-8 w-px bg-slate-600/50"></div>
                 <span className="text-xs sm:text-sm uppercase tracking-wider text-slate-400 leading-tight">Years of<br/>Experience</span>
@@ -286,7 +286,7 @@ const About = () => {
               {features.map((feature, index) => (
                 <li
                   key={index}
-                  className="flex items-center gap-3 p-3 rounded-xl
+                  className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl
                     bg-slate-800/40 border border-slate-700/30
                     hover:border-accent/30 hover:bg-slate-800/70
                     transition-all duration-300 group cursor-default"

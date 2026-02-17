@@ -22,7 +22,7 @@ import SEO from './components/common/SEO';
 import WhatsAppButton from './components/common/WhatsAppButton';
 import CookieConsent from './components/common/CookieConsent';
 import GoogleAnalytics from './components/common/GoogleAnalytics';
-import ScrollProgress from './components/common/ScrollProgress';
+import CustomScrollbar from './components/common/CustomScrollbar';
 
 // Google Analytics Measurement ID - Replace with your actual ID
 const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
@@ -48,8 +48,8 @@ function App() {
       {/* Google Analytics */}
       <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
 
-      {/* Scroll Progress Indicator */}
-      <ScrollProgress />
+      {/* Custom Scrollbar */}
+      <CustomScrollbar />
 
       <div className="App min-h-screen flex flex-col page-enter">
         {/* Fixed navigation header */}

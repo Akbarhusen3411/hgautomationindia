@@ -1,7 +1,6 @@
 /**
  * Contact Section Component
- * Professional dark gradient theme with attractive contact form
- * Professional dark gradient theme with attractive contact form
+ * Dark futuristic theme with glassmorphism form and animated contact icons
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -86,6 +85,7 @@ const Contact = () => {
     subject: '',
     message: '',
     countryCode: '+91',
+    website: '',
   });
 
   const [focusedField, setFocusedField] = useState(null);
@@ -187,18 +187,28 @@ const Contact = () => {
     setSuccess(null);
     setError(null);
 
+    // Honeypot: if filled, silently fake success (bot detected)
+    if (formData.website) {
+      setSuccess('Thank you! Your message has been sent successfully.');
+      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '', countryCode: '+91', website: '' });
+      setFieldValidated({});
+      setSelectedCountry(countries[0]);
+      return;
+    }
+
     if (!validateForm()) return;
 
     setLoading(true);
     try {
+      const { website, ...cleanData } = formData;
       const submitData = {
-        ...formData,
-        phone: formData.phone.replace(/[\s\-().]/g, ''),
+        ...cleanData,
+        phone: cleanData.phone.replace(/[\s\-().]/g, ''),
         countryCode: selectedCountry.dialCode,
       };
       const response = await contactApi.submit(submitData);
       setSuccess(response.message);
-      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '', countryCode: '+91' });
+      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '', countryCode: '+91', website: '' });
       setFieldValidated({});
       setSelectedCountry(countries[0]);
     } catch (err) {
@@ -218,6 +228,7 @@ const Contact = () => {
       label: 'Contact Person',
       value: 'Bakarali Momin',
       subValue: 'Founder & Proprietor',
+      animClass: 'contact-icon-breathe',
     },
     {
       icon: (
@@ -228,6 +239,7 @@ const Contact = () => {
       label: 'Phone',
       value: '+91 83200 49749',
       href: 'tel:+918320049749',
+      animClass: 'contact-icon-ring',
     },
     {
       icon: (
@@ -238,6 +250,7 @@ const Contact = () => {
       label: 'Email',
       value: 'bakarali@hgautomationindia.com',
       href: 'mailto:bakarali@hgautomationindia.com',
+      animClass: 'contact-icon-envelope',
     },
     {
       icon: (
@@ -248,16 +261,22 @@ const Contact = () => {
       label: 'Address',
       value: 'Building No. 70, Mominvad',
       subValue: 'Vaso, Kheda, Gujarat 387710',
+      animClass: 'contact-icon-pin',
     },
   ];
 
 
   return (
-    <section id="contact" className="py-24 bg-gradient-to-br from-primary-dark via-primary to-primary-light relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-industrial-pattern opacity-20" />
+    <section id="contact" className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[#0a0f1e] via-slate-950 to-[#0d1526] relative overflow-hidden">
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(45,160,212,1) 1px, transparent 1px), linear-gradient(90deg, rgba(45,160,212,1) 1px, transparent 1px)`,
+          backgroundSize: '45px 45px',
+        }}
+      />
 
-      {/* Animated Background Elements with Parallax */}
+      {/* Gradient Orbs with Parallax */}
       <div
         className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"
         style={{ transform: `translateY(${scrollY * 0.05}px)` }}
@@ -266,17 +285,60 @@ const Contact = () => {
         className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse"
         style={{ animationDelay: '1s', transform: `translateY(${scrollY * -0.03}px)` }}
       />
+      <div
+        className="absolute top-1/2 left-1/3 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl"
+        style={{ transform: `translateY(${scrollY * 0.02}px)` }}
+      />
+
+      {/* Circuit Line Decorations */}
+      <svg className="absolute left-0 top-1/4 w-32 h-64 hidden lg:block" viewBox="0 0 128 256" fill="none">
+        <path d="M0 128h40l20-20h28" stroke="rgba(45,160,212,0.08)" strokeWidth="1"/>
+        <path d="M0 160h60l15 15h13" stroke="rgba(45,160,212,0.06)" strokeWidth="1"/>
+        <path d="M0 96h30l25 25h33" stroke="rgba(45,160,212,0.05)" strokeWidth="1"/>
+        <circle cx="88" cy="108" r="2" fill="rgba(45,160,212,0.15)"/>
+        <circle cx="88" cy="175" r="2" fill="rgba(45,160,212,0.12)"/>
+        <circle cx="88" cy="121" r="1.5" fill="rgba(45,160,212,0.1)"/>
+      </svg>
+      <svg className="absolute right-0 bottom-1/4 w-32 h-64 hidden lg:block" viewBox="0 0 128 256" fill="none">
+        <path d="M128 128h-40l-20 20h-28" stroke="rgba(45,160,212,0.08)" strokeWidth="1"/>
+        <path d="M128 96h-60l-15-15h-13" stroke="rgba(45,160,212,0.06)" strokeWidth="1"/>
+        <path d="M128 160h-30l-25-25h-33" stroke="rgba(45,160,212,0.05)" strokeWidth="1"/>
+        <circle cx="40" cy="148" r="2" fill="rgba(45,160,212,0.15)"/>
+        <circle cx="40" cy="81" r="2" fill="rgba(45,160,212,0.12)"/>
+        <circle cx="40" cy="135" r="1.5" fill="rgba(45,160,212,0.1)"/>
+      </svg>
+
+      {/* Dot Grid Decoration */}
+      <div className="absolute top-16 right-20 grid grid-cols-4 gap-3 hidden lg:grid">
+        {[...Array(16)].map((_, i) => (
+          <div key={i} className="w-[1.5px] h-[1.5px] rounded-full bg-accent/20" />
+        ))}
+      </div>
+
+      {/* Floating Particles */}
+      {[...Array(4)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-1 h-1 bg-accent/30 rounded-full animate-particleDrift"
+          style={{
+            top: `${20 + i * 20}%`,
+            left: `${10 + i * 25}%`,
+            animationDelay: `${i * 2.5}s`,
+            animationDuration: `${10 + i * 3}s`,
+          }}
+        />
+      ))}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header with Scroll Reveal */}
-        <div className="text-center mb-16">
+        {/* Section Header */}
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <ScrollReveal animation="fade-down" duration={600}>
-            <span className="inline-block px-4 py-2 bg-accent/20 text-accent rounded-full text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-2 bg-accent/20 text-accent rounded-full text-sm font-medium mb-4 border border-accent/20 backdrop-blur-sm">
               Contact Us
             </span>
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={100} duration={700}>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Let's Start a <span className="text-accent">Conversation</span>
             </h2>
           </ScrollReveal>
@@ -284,26 +346,28 @@ const Contact = () => {
             <div className="w-20 h-1 bg-accent mx-auto mb-6 rounded-full" />
           </ScrollReveal>
           <ScrollReveal animation="fade-up" delay={300} duration={700}>
-            <p className="text-white/70 text-lg max-w-2xl mx-auto">
+            <p className="text-white/70 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
               Ready to optimize your manufacturing processes? Contact us for a free
               consultation and discover how our automation solutions can transform your operations.
             </p>
           </ScrollReveal>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-12">
-          {/* Contact Info */}
+        <div className="grid lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12">
+          {/* Contact Info — Left Column */}
           <div className="lg:col-span-2">
             <ScrollReveal animation="fade-right" duration={600}>
               <StaggerContainer animation="fade-up" staggerDelay={100} className="space-y-2">
                 {contactInfo.map((item, index) => (
                   <div key={index} className="group relative">
-                    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10
-                                  hover:bg-white/10 hover:border-accent/30 transition-all duration-300 hover:translate-x-2">
-                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-accent to-accent-dark rounded-md
-                                    flex items-center justify-center text-white shadow-md shadow-accent/20
-                                    group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                        <span className="[&>svg]:w-4 [&>svg]:h-4">{item.icon}</span>
+                    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-slate-800/40 backdrop-blur-sm border border-slate-700/30
+                                  hover:bg-slate-800/70 hover:border-accent/40 transition-all duration-300 hover:translate-x-2
+                                  hover:shadow-lg hover:shadow-accent/5">
+                      {/* Icon with unique animation */}
+                      <div className={`flex-shrink-0 w-9 h-9 bg-gradient-to-br from-accent/15 to-cyan-500/10 border border-accent/20 rounded-xl
+                                    flex items-center justify-center text-accent
+                                    group-hover:border-accent/40 transition-all duration-300`}>
+                        <span className={`[&>svg]:w-4 [&>svg]:h-4 ${item.animClass}`}>{item.icon}</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="text-[9px] text-accent uppercase tracking-wider font-semibold block leading-tight">
@@ -321,27 +385,31 @@ const Contact = () => {
                         )}
                       </div>
                     </div>
+                    {/* Bottom glow line on hover */}
+                    <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent/30 transition-all duration-300" />
                   </div>
                 ))}
               </StaggerContainer>
             </ScrollReveal>
 
-            {/* Social Links / Quick Actions */}
+            {/* Quick Connect */}
             <ScrollReveal animation="fade-up" delay={500} duration={700}>
-              <div className="mt-3 p-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="mt-3 p-3 rounded-lg bg-slate-800/40 backdrop-blur-sm border border-slate-700/30">
                 <h4 className="text-white font-medium text-[13px] mb-2">Quick Connect</h4>
                 <div className="flex gap-2">
                   <a href="https://wa.me/918320049749" target="_blank" rel="noopener noreferrer"
-                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-green-500 hover:bg-green-600
-                              text-white text-[13px] rounded-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/30">
+                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-green-500/10 border border-green-500/30
+                              text-green-400 text-[13px] rounded-md transition-all duration-300 hover:scale-105
+                              hover:shadow-lg hover:shadow-green-500/20 hover:bg-green-500/20 hover:border-green-500/50">
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
                     <span className="font-medium">WhatsApp</span>
                   </a>
                   <a href="tel:+918320049749"
-                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-accent hover:bg-accent-dark
-                              text-white text-[13px] rounded-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/30">
+                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 bg-accent/10 border border-accent/30
+                              text-accent text-[13px] rounded-md transition-all duration-300 hover:scale-105
+                              hover:shadow-lg hover:shadow-accent/20 hover:bg-accent/20 hover:border-accent/50">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
@@ -352,14 +420,75 @@ const Contact = () => {
             </ScrollReveal>
           </div>
 
-          {/* Contact Form */}
+          {/* Contact Form — Right Column */}
           <ScrollReveal animation="fade-left" delay={200} duration={800} className="lg:col-span-3">
-            <div className="contact-form-card bg-white rounded-xl p-4 md:p-5 shadow-2xl relative overflow-hidden">
-              {/* Decorative Elements */}
-              <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-full" />
-              <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-primary/5 to-transparent rounded-tr-full" />
+            <div className="contact-form-card bg-white/95 backdrop-blur-md border border-sky-100 shadow-xl shadow-accent/5 rounded-2xl p-4 md:p-5 relative overflow-hidden">
+              {/* Top accent gradient line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+
+              {/* Corner accent SVGs */}
+              <svg className="absolute top-3 right-3 w-6 h-6 text-accent/15" viewBox="0 0 24 24" fill="none">
+                <path d="M24 0v8h-2V2h-6V0h8z" fill="currentColor"/>
+              </svg>
+              <svg className="absolute bottom-3 left-3 w-6 h-6 text-accent/15" viewBox="0 0 24 24" fill="none">
+                <path d="M0 24v-8h2v6h6v2H0z" fill="currentColor"/>
+              </svg>
 
               <div className="relative z-10">
+                {success ? (
+                  /* ─── Success Thank You Screen ─── */
+                  <div className="flex flex-col items-center justify-center py-8 px-4 animate-fadeInUp">
+                    {/* Animated checkmark circle */}
+                    <div className="relative mb-6">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 contact-success-ring">
+                        <svg className="w-10 h-10 text-white animate-checkPop" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      {/* Glow ring */}
+                      <div className="absolute -inset-3 rounded-full bg-green-400/20 blur-xl animate-pulse" />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold text-primary-dark mb-2">Thank You!</h3>
+                    <p className="text-slate-500 text-sm text-center max-w-xs mb-6 leading-relaxed">
+                      Your message has been sent successfully. We'll get back to you within <strong className="text-accent">24 hours</strong>.
+                    </p>
+
+                    {/* Info cards */}
+                    <div className="w-full grid grid-cols-2 gap-3 mb-8">
+                      <div className="bg-sky-50/80 border border-sky-100 rounded-xl p-3 text-center">
+                        <svg className="w-5 h-5 text-accent mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <p className="text-[11px] text-slate-500">Check your inbox for</p>
+                        <p className="text-xs font-semibold text-primary-dark">Confirmation Email</p>
+                      </div>
+                      <div className="bg-sky-50/80 border border-sky-100 rounded-xl p-3 text-center">
+                        <svg className="w-5 h-5 text-accent mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-[11px] text-slate-500">Expected response</p>
+                        <p className="text-xs font-semibold text-primary-dark">Within 24 Hours</p>
+                      </div>
+                    </div>
+
+                    {/* Send Another Message button */}
+                    <button
+                      onClick={() => { setSuccess(null); setError(null); }}
+                      className="group flex items-center gap-2 px-6 py-2.5 bg-white border border-slate-200 rounded-xl
+                                 text-sm font-medium text-slate-600 hover:text-accent hover:border-accent/30
+                                 hover:shadow-md hover:shadow-accent/10 transition-all duration-300"
+                    >
+                      <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Send Another Message
+                    </button>
+                  </div>
+                ) : (
+                  /* ─── Form View ─── */
+                  <>
                 <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-9 h-9 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center shadow-md shadow-accent/30">
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,30 +497,13 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-primary-dark">Send Us a Message</h3>
-                    <p className="text-steel-500 text-[11px]">We'll get back to you within 24 hours</p>
+                    <p className="text-slate-500 text-[11px]">We'll get back to you within 24 hours</p>
                   </div>
                 </div>
 
-                {/* Success message */}
-                {success && (
-                  <div className="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl animate-fadeInUp">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="text-green-800 font-semibold text-sm">Message Sent!</h4>
-                        <p className="text-green-700 text-xs">{success}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Error message */}
                 {error && (
-                  <div className="mb-4 p-3 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-xl animate-fadeInUp">
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl animate-fadeInUp">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -399,18 +511,32 @@ const Contact = () => {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-red-800 font-semibold text-sm">Something went wrong</h4>
-                        <p className="text-red-700 text-xs">{error}</p>
+                        <h4 className="text-red-700 font-semibold text-sm">Something went wrong</h4>
+                        <p className="text-red-600 text-xs">{error}</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 <form onSubmit={handleSubmit} noValidate>
+                  {/* Honeypot anti-spam field */}
+                  <div className="contact-honeypot" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      type="text"
+                      id="website"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-2.5">
                     {/* Row 1: Name */}
                     <div className="form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Full Name <span className="text-accent">*</span>
                       </label>
                       <div className={`form-input-wrapper ${focusedField === 'name' ? 'focused' : ''} ${validationErrors.name ? 'error' : ''} ${fieldValidated.name ? 'valid' : ''}`}>
@@ -450,7 +576,7 @@ const Contact = () => {
 
                     {/* Row 1: Company */}
                     <div className="form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Company Name
                       </label>
                       <div className={`form-input-wrapper ${focusedField === 'company' ? 'focused' : ''} ${fieldValidated.company ? 'valid' : ''}`}>
@@ -475,7 +601,7 @@ const Contact = () => {
 
                     {/* Row 2: Email */}
                     <div className="form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Email Address <span className="text-accent">*</span>
                       </label>
                       <div className={`form-input-wrapper ${focusedField === 'email' ? 'focused' : ''} ${validationErrors.email ? 'error' : ''} ${fieldValidated.email ? 'valid' : ''}`}>
@@ -515,7 +641,7 @@ const Contact = () => {
 
                     {/* Row 2: Phone */}
                     <div className="form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Phone Number <span className="text-accent">*</span>
                       </label>
                       <div className={`form-input-wrapper ${focusedField === 'phone' ? 'focused' : ''} ${validationErrors.phone ? 'error' : ''} ${fieldValidated.phone ? 'valid' : ''}`}>
@@ -595,7 +721,7 @@ const Contact = () => {
 
                     {/* Row 4: Subject - Full Width */}
                     <div className="md:col-span-2 form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Subject <span className="text-accent">*</span>
                       </label>
                       <div className={`form-input-wrapper ${focusedField === 'subject' ? 'focused' : ''} ${validationErrors.subject ? 'error' : ''} ${fieldValidated.subject ? 'valid' : ''}`}>
@@ -635,7 +761,7 @@ const Contact = () => {
 
                     {/* Row 5: Message - Full Width */}
                     <div className="md:col-span-2 form-field-group">
-                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Message <span className="text-accent">*</span>
                       </label>
                       <div className={`form-textarea-wrapper ${focusedField === 'message' ? 'focused' : ''} ${validationErrors.message ? 'error' : ''}`}>
@@ -656,10 +782,10 @@ const Contact = () => {
                           disabled={loading}
                         />
                         <div className="form-textarea-counter">
-                          <span className={formData.message.length >= 20 ? 'text-green-500' : 'text-steel-400'}>
+                          <span className={formData.message.length >= 20 ? 'text-green-500' : 'text-slate-500'}>
                             {formData.message.length}
                           </span>
-                          <span className="text-steel-400">/20 min</span>
+                          <span className="text-slate-500">/20 min</span>
                         </div>
                       </div>
                       {validationErrors.message && (
@@ -702,6 +828,8 @@ const Contact = () => {
                     </div>
                   </div>
                 </form>
+                  </>
+                )}
               </div>
             </div>
           </ScrollReveal>

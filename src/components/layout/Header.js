@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Logo from '../common/Logo';
+import { scrollToElement } from '../../utils/smoothScroll';
 
 const Header = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -95,13 +96,7 @@ const Header = () => {
   }, [lastScrollY]);
 
   const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      window.scrollTo({
-        top: section.offsetTop - 80,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElement(sectionId, 80);
     setIsMenuOpen(false);
   };
 
@@ -117,19 +112,14 @@ const Header = () => {
         {/* Dark Glassmorphism Background - Works on both light and dark backgrounds */}
         <div className={`absolute inset-0 transition-all duration-500
           ${isScrolled
-            ? 'bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]'
-            : 'bg-slate-900/60 backdrop-blur-lg border-b border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]'
+            ? 'bg-slate-900/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)]'
+            : 'bg-slate-900/60 backdrop-blur-lg shadow-[0_4px_20px_rgba(0,0,0,0.2)]'
           }
-          group-hover/header:bg-slate-900/90 group-hover/header:backdrop-blur-2xl group-hover/header:border-white/20
+          group-hover/header:bg-slate-900/90 group-hover/header:backdrop-blur-2xl
           group-hover/header:shadow-[0_12px_40px_rgba(0,0,0,0.4)]`}
         >
           {/* Glass refraction effect - subtle gradient */}
           <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-cyan-500/5 opacity-50" />
-
-          {/* Animated gradient border at bottom */}
-          <div className={`absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent
-            transition-all duration-500 ${isScrolled ? 'opacity-100' : 'opacity-50'} group-hover/header:via-accent/70`}
-          />
 
           {/* Subtle top highlight for depth */}
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -145,6 +135,25 @@ const Header = () => {
           />
         </div>
 
+        {/* Animated bottom divider glow */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
+          {/* Main glow line */}
+          <div className={`h-[2px] transition-all duration-500 ${isScrolled ? 'opacity-100' : 'opacity-60'}`}
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(45,160,212,0.2) 10%, rgba(45,160,212,0.6) 30%, rgba(34,211,238,0.9) 50%, rgba(45,160,212,0.6) 70%, rgba(45,160,212,0.2) 90%, transparent 100%)',
+              boxShadow: '0 0 8px rgba(45,160,212,0.4), 0 0 20px rgba(45,160,212,0.15), 0 2px 8px rgba(45,160,212,0.1)',
+            }}
+          />
+          {/* Shimmer sweep */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] header-divider-shimmer" />
+          {/* Soft glow spread below */}
+          <div className={`h-[12px] -mt-[1px] transition-opacity duration-500 ${isScrolled ? 'opacity-80' : 'opacity-40'}`}
+            style={{
+              background: 'radial-gradient(ellipse at 50% 0%, rgba(45,160,212,0.2) 0%, rgba(45,160,212,0.05) 50%, transparent 80%)',
+            }}
+          />
+        </div>
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
@@ -155,17 +164,35 @@ const Header = () => {
                 e.preventDefault();
                 scrollToSection('home');
               }}
-              className={`flex-shrink-0 z-50 transition-all duration-300
-                ${isMenuOpen ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'}`}
+              className="flex-shrink-0 z-50 transition-all duration-300"
             >
               <Logo size="small" showText={true} />
             </a>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center">
-              {/* Navigation Pills Container - Dark Glass Effect */}
-              <div className="flex items-center gap-1 p-1.5 rounded-full bg-white/5 border border-white/10
-                            backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+            <nav className="hidden md:flex items-center gap-3">
+              {/* Navigation Tabs Container */}
+              <div className="relative flex items-center gap-0.5 p-1 rounded-2xl
+                            bg-gradient-to-b from-white/[0.07] to-white/[0.03]
+                            border border-white/[0.08]
+                            shadow-[0_2px_20px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.06)]
+                            backdrop-blur-xl">
+
+                {/* Sliding active indicator */}
+                <div
+                  className="absolute top-1 bottom-1 rounded-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-0"
+                  style={{
+                    left: `${navItems.findIndex(i => i.id === activeSection) * (100 / navItems.length)}%`,
+                    width: `${100 / navItems.length}%`,
+                    paddingLeft: 2,
+                    paddingRight: 2,
+                  }}
+                >
+                  <div className="w-full h-full rounded-xl bg-gradient-to-b from-accent/25 to-accent/10
+                                  border border-accent/30
+                                  shadow-[0_0_15px_rgba(45,160,212,0.2),0_4px_12px_rgba(45,160,212,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]" />
+                </div>
+
                 {navItems.map((item, index) => (
                   <a
                     key={item.id}
@@ -174,61 +201,60 @@ const Header = () => {
                       e.preventDefault();
                       scrollToSection(item.id);
                     }}
-                    className={`relative px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300
-                      ${activeSection === item.id
-                        ? 'text-white'
-                        : 'text-white/70 hover:text-white'
-                      }`}
-                    style={{ animationDelay: `${index * 50}ms` }}
+                    className="group/nav relative z-10 flex items-center gap-2 px-5 py-2.5 rounded-xl
+                              text-sm font-medium transition-all duration-300 select-none"
                   >
-                    {/* Active background pill - Glass with subtle accent */}
-                    {activeSection === item.id && (
-                      <span className="absolute inset-0 rounded-full bg-accent/20 border border-accent/30
-                                     shadow-[0_4px_15px_rgba(45,160,212,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]
-                                     backdrop-blur-xl animate-scale-in" />
-                    )}
-
-                    {/* Hover glow */}
-                    <span className={`absolute inset-0 rounded-full transition-all duration-300
+                    {/* Icon */}
+                    <span className={`w-4 h-4 transition-all duration-300
                       ${activeSection === item.id
-                        ? 'opacity-0'
-                        : 'bg-transparent hover:bg-white/10'}`} />
+                        ? 'text-accent scale-110'
+                        : 'text-white/40 group-hover/nav:text-white/70 scale-100'}`}>
+                      {item.icon}
+                    </span>
 
                     {/* Label */}
-                    <span className="relative z-10">{item.label}</span>
+                    <span className={`transition-all duration-300
+                      ${activeSection === item.id
+                        ? 'text-white'
+                        : 'text-white/50 group-hover/nav:text-white/80'}`}>
+                      {item.label}
+                    </span>
 
-                    {/* Underline indicator */}
-                    <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-accent rounded-full transition-all duration-300
-                      ${activeSection === item.id ? 'w-0' : 'w-0 group-hover:w-4'}`} />
+                    {/* Active dot indicator */}
+                    <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent
+                                    transition-all duration-300 shadow-[0_0_6px_rgba(45,160,212,0.8)]
+                      ${activeSection === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`} />
                   </a>
                 ))}
               </div>
 
-              {/* CTA Button - Accent Glass */}
+              {/* Separator */}
+              <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/15 to-transparent" />
+
+              {/* CTA Button */}
               <a
                 href="#contact"
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToSection('contact');
                 }}
-                className="ml-4 relative group/btn overflow-hidden px-6 py-2.5 rounded-full
-                         bg-accent/20 border border-accent/40 text-white text-sm font-semibold
-                         backdrop-blur-md
-                         hover:bg-accent hover:border-accent
-                         hover:shadow-[0_8px_25px_rgba(45,160,212,0.4)]
-                         hover:-translate-y-0.5 transition-all duration-500"
+                className="group/btn relative overflow-hidden flex items-center gap-2 px-6 py-2.5 rounded-xl
+                         bg-gradient-to-r from-accent to-cyan-500 text-white text-sm font-semibold
+                         shadow-[0_4px_20px_rgba(45,160,212,0.35)]
+                         hover:shadow-[0_6px_30px_rgba(45,160,212,0.5)]
+                         hover:-translate-y-0.5 active:translate-y-0
+                         transition-all duration-400"
               >
-                {/* Inner glow */}
-                <span className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-                {/* Shine effect */}
-                <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700
-                               bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
-                <span className="relative flex items-center gap-2">
-                  Get Quote
-                  <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </span>
+                {/* Shimmer sweep */}
+                <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full
+                               transition-transform duration-700 ease-out
+                               bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-12" />
+                {/* Top highlight */}
+                <span className="absolute top-0 left-2 right-2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                <span className="relative">Get Quote</span>
+                <svg className="relative w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </a>
             </nav>
 
@@ -273,7 +299,7 @@ const Header = () => {
         {/* Solid backdrop - NO blur for performance */}
         <div
           className={`absolute inset-0 bg-primary-dark transition-opacity duration-200 ease-out
-            ${isMenuOpen ? 'opacity-[0.97]' : 'opacity-0'}`}
+            ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
           style={{ willChange: 'opacity' }}
           onClick={() => setIsMenuOpen(false)}
         />

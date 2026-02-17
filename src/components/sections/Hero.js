@@ -6,6 +6,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import logoImage from '../../images/Logo.png';
 import useAnimatedCounter from '../../hooks/useAnimatedCounter';
+import { scrollToElement } from '../../utils/smoothScroll';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,13 +21,7 @@ const Hero = () => {
   }, []);
 
   const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      window.scrollTo({
-        top: section.offsetTop - 80,
-        behavior: 'smooth'
-      });
-    }
+    scrollToElement(sectionId, 80);
   };
 
   return (
@@ -44,8 +39,8 @@ const Hero = () => {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 sm:pb-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 sm:pt-20 sm:pb-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Text Content */}
           <div className={`transition-all duration-1000 text-center lg:text-left ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6">
@@ -53,7 +48,7 @@ const Hero = () => {
               <span className="text-white/80 text-sm font-medium">Industrial Automation Experts</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 sm:mb-6">
               Powering Industry
               <br />
               <span className="text-gradient">with Smart</span>
@@ -61,12 +56,12 @@ const Hero = () => {
               Automation
             </h1>
 
-            <p className="text-lg text-white/70 mb-8 max-w-lg mx-auto lg:mx-0">
+            <p className="text-base sm:text-lg text-white/70 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0">
               We design, program, and integrate industrial automation systems that
               optimize your manufacturing processes with precision and reliability.
             </p>
 
-            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+            <div className="flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
               <button
                 onClick={() => scrollToSection('services')}
                 className="btn-primary flex items-center gap-2"
@@ -88,21 +83,21 @@ const Hero = () => {
             </div>
 
             {/* Stats with Animated Counters */}
-            <div ref={statsRef} className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 pt-8 border-t border-white/10">
+            <div ref={statsRef} className="grid grid-cols-3 gap-3 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
               <div ref={yearsCounter.ref} className="group">
-                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
                   {yearsCounter.count}
                 </div>
                 <div className="text-xs sm:text-sm text-white/60 mt-1">Years Experience</div>
               </div>
               <div ref={projectsCounter.ref} className="group">
-                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
                   {projectsCounter.count}
                 </div>
                 <div className="text-xs sm:text-sm text-white/60 mt-1">Projects Done</div>
               </div>
               <div className="group">
-                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center lg:justify-start gap-2">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center lg:justify-start gap-2">
                   <span className="relative flex h-3 w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -258,19 +253,12 @@ const Hero = () => {
                 {/* Glow backdrop */}
                 <div className="absolute -inset-10 bg-accent/15 rounded-full blur-3xl animate-pulse-slow" />
 
-                {/* Glass HUD Frame */}
-                <div className="relative bg-white/5 backdrop-blur-md p-10 rounded-2xl border border-accent/20 shadow-[0_0_40px_rgba(45,160,212,0.15)] group-hover:border-accent/50 group-hover:shadow-[0_0_80px_rgba(45,160,212,0.3)] transition-all duration-700">
-                  {/* Corner accents on HUD frame */}
-                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-accent/40 rounded-tl" />
-                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-accent/40 rounded-tr" />
-                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-accent/40 rounded-bl" />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-accent/40 rounded-br" />
-
-                  {/* Logo */}
+                {/* Logo with float animation */}
+                <div className="relative animate-heroFloat">
                   <img
                     src={logoImage}
                     alt="HG Automation"
-                    className="w-44 h-auto animate-holoFloat drop-shadow-[0_0_25px_rgba(45,160,212,0.6)] group-hover:drop-shadow-[0_0_50px_rgba(45,160,212,1)] transition-all duration-700"
+                    className="w-44 h-auto drop-shadow-[0_0_25px_rgba(45,160,212,0.6)] group-hover:drop-shadow-[0_0_50px_rgba(45,160,212,1)] transition-all duration-700"
                   />
                 </div>
               </div>

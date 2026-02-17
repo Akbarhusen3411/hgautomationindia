@@ -15,46 +15,55 @@ const Testimonials = () => {
   const testimonials = [
     {
       id: 1,
-      name: 'Rajesh Patel',
-      role: 'Plant Manager',
-      company: 'Gujarat Chemicals Ltd.',
-      content: 'HG Automation transformed our manufacturing process with their PLC programming expertise. We saw a 40% increase in production efficiency within the first quarter. Their team\'s dedication and technical knowledge is exceptional.',
+      name: 'Ansar Ali Shekh',
+      role: 'Director',
+      company: 'IK Controls Private Limited',
+      content: 'HG Automation delivered outstanding PLC programming and control panel solutions for our facility. Their technical expertise and commitment to quality helped us achieve seamless automation across our production lines. Truly a reliable partner for industrial automation.',
       rating: 5,
       image: null,
     },
     {
       id: 2,
-      name: 'Amit Shah',
-      role: 'Operations Director',
-      company: 'Pharma Industries',
-      content: 'The SCADA system implemented by HG Automation gave us complete visibility into our operations. Real-time monitoring and analytics have been game-changers for our quality control processes.',
+      name: 'Bharghav Patel',
+      role: 'Director',
+      company: 'Venus Automation',
+      content: 'Working with HG Automation has been an excellent experience. Their team understood our requirements perfectly and delivered a robust automation system on time. The after-sales support and technical guidance they provide is unmatched in the industry.',
       rating: 5,
       image: null,
     },
     {
       id: 3,
-      name: 'Priya Mehta',
-      role: 'Technical Head',
-      company: 'AutoParts Manufacturing',
-      content: 'We partnered with HG Automation for our Industry 4.0 upgrade. Their expertise in IoT integration and predictive maintenance has significantly reduced our downtime. Highly recommended!',
+      name: 'Mahedi Ali Momin',
+      role: 'Founder',
+      company: 'SPLENDENT AUTOMATION',
+      content: 'HG Automation\'s expertise in SCADA systems and industrial control solutions is exceptional. They transformed our operations with real-time monitoring and efficient automation, significantly improving our productivity and reducing downtime.',
       rating: 5,
       image: null,
     },
     {
       id: 4,
-      name: 'Vikram Singh',
-      role: 'Factory Owner',
-      company: 'Singh Textiles',
-      content: 'The control panel design and installation by HG Automation exceeded our expectations. Professional service, timely delivery, and excellent after-sales support. A trusted partner for automation needs.',
-      rating: 4,
+      name: 'Chirag Patel',
+      role: 'Proprietor',
+      company: 'CS Techno Engineers',
+      content: 'We have been consistently impressed with HG Automation\'s professional approach and deep knowledge of industrial automation. Their control panel designs and PLC solutions are top-notch, and they always deliver beyond expectations.',
+      rating: 5,
       image: null,
     },
     {
       id: 5,
-      name: 'Sneha Desai',
-      role: 'Production Manager',
-      company: 'Food Processing Co.',
-      content: 'HG Automation\'s machine vision solution for quality inspection has eliminated manual errors and improved our product consistency by 95%. Their team understands industrial challenges perfectly.',
+      name: 'Rakesh Sharma',
+      role: 'Plant Manager',
+      company: 'Shree Industries',
+      content: 'HG Automation upgraded our entire production line with advanced VFD and PLC-based automation. The energy savings alone justified the investment within months. Their team is highly skilled and always available for support when needed.',
+      rating: 5,
+      image: null,
+    },
+    {
+      id: 6,
+      name: 'Nikunj Desai',
+      role: 'Technical Director',
+      company: 'Apex Control Systems',
+      content: 'From initial consultation to final commissioning, HG Automation handled our project with complete professionalism. Their expertise in HMI programming and panel wiring is remarkable. We look forward to continuing this partnership on future projects.',
       rating: 5,
       image: null,
     },
@@ -115,38 +124,47 @@ const Testimonials = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 relative overflow-hidden bg-gradient-to-br from-primary-dark via-primary to-slate-900"
+      className="py-12 sm:py-16 lg:py-24 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50"
     >
+      {/* Top divider: About(dark) → Testimonials(light) */}
+      <div className="section-divider-top dark-to-light" />
+      <div className="section-glow-top" />
+      {/* Bottom divider: Testimonials(light) → Contact(dark) */}
+      <div className="section-divider-bottom light-to-dark" />
+      <div className="section-glow-bottom" />
+
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-industrial-pattern opacity-10" />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+      <div className="absolute inset-0 opacity-10" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230f172a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }} />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-accent/8 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-500/6 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
       {/* Floating Particles */}
-      <div className="absolute top-20 right-20 w-3 h-3 bg-accent/40 rounded-full animate-float hidden lg:block" />
-      <div className="absolute bottom-32 left-16 w-2 h-2 bg-white/30 rounded-full animate-float hidden lg:block" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-20 right-20 w-3 h-3 bg-accent/30 rounded-full animate-float hidden lg:block" />
+      <div className="absolute bottom-32 left-16 w-2 h-2 bg-slate-400/30 rounded-full animate-float hidden lg:block" style={{ animationDelay: '1s' }} />
       <div className="absolute top-1/2 right-1/4 w-4 h-4 border border-accent/30 rounded-full animate-pulse hidden lg:block" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm text-accent rounded-full text-sm font-semibold mb-4">
+        <div className={`text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <span className="inline-block px-4 py-2 bg-accent/10 backdrop-blur-sm text-accent rounded-full text-sm font-semibold mb-4 border border-accent/20">
             Client Success Stories
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary-dark mb-4">
             What Our{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">
               Clients Say
             </span>
           </h2>
           <div className={`w-20 h-1 bg-gradient-to-r from-accent to-cyan-400 mx-auto mb-6 rounded-full transition-all duration-700 delay-200 ${isVisible ? 'scale-x-100' : 'scale-x-0'}`} />
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
             Trusted by leading manufacturers across Gujarat for reliable automation solutions.
           </p>
         </div>
 
         {/* Testimonials Carousel */}
-        <div className="relative px-8 md:px-16" ref={carouselRef}>
+        <div className="relative px-2 sm:px-8 md:px-16" ref={carouselRef}>
           {/* Navigation Arrows */}
           <button
             onClick={goToPrev}
@@ -236,7 +254,7 @@ const Testimonials = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`mt-8 sm:mt-12 lg:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {[
             { value: '100+', label: 'Happy Clients' },
             { value: '500+', label: 'Projects Completed' },
@@ -244,10 +262,10 @@ const Testimonials = () => {
             { value: '10+', label: 'Years Experience' },
           ].map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">
                 {stat.value}
               </div>
-              <div className="text-white/60 text-sm mt-1">{stat.label}</div>
+              <div className="text-slate-600 text-sm mt-1">{stat.label}</div>
             </div>
           ))}
         </div>

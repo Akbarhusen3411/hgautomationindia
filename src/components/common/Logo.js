@@ -26,16 +26,14 @@ const Logo = ({ size = 'default', showText = true, transparent = false, classNam
         <div className="absolute -inset-1 rounded-xl bg-accent/0 group-hover:bg-accent/15
                       blur-lg transition-all duration-500 opacity-0 group-hover:opacity-100" />
 
-        {/* Logo container - rounded rectangle with dark bg and subtle border */}
-        <div className={`relative transition-all duration-500
-                      ${transparent ? '' : 'p-2 rounded-xl bg-slate-800/80 border border-slate-600/40 group-hover:border-accent/40 group-hover:shadow-[0_0_20px_rgba(45,160,212,0.15)]'}`}>
-
+        {/* Logo image - clean, no border */}
+        <div className="relative transition-all duration-500">
           <img
             src={transparent ? logoTransparent : logoImage}
             alt="HG Automation"
             className={`${iconSize} w-auto relative z-10
                        group-hover:scale-105 transition-transform duration-500
-                       drop-shadow-[0_0_6px_rgba(45,160,212,0.3)]`}
+                       drop-shadow-[0_0_8px_rgba(45,160,212,0.4)]`}
           />
         </div>
       </div>
@@ -55,10 +53,11 @@ const Logo = ({ size = 'default', showText = true, transparent = false, classNam
           </h1>
 
           {/* Tagline */}
-          <span className={`${taglineSize} text-steel-400 tracking-[0.2em] uppercase font-medium
-                         group-hover:text-accent/70 transition-colors duration-500 mt-0.5`}
+          <span className={`${taglineSize} text-steel-400 tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium
+                         group-hover:text-accent/70 transition-colors duration-500 mt-0.5
+                         block max-w-[180px] sm:max-w-none truncate`}
                 style={{ fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
-            Industrial Excellence
+            Precision Control, Optimized Performance
           </span>
         </div>
       )}

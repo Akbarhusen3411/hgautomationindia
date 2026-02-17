@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { scrollToElement } from '../../utils/smoothScroll';
 
 const ServiceModal = ({ service, isOpen, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -348,10 +349,7 @@ const ServiceModal = ({ service, isOpen, onClose }) => {
                     e.preventDefault();
                     handleClose();
                     setTimeout(() => {
-                      const section = document.getElementById('contact');
-                      if (section) {
-                        window.scrollTo({ top: section.offsetTop - 80, behavior: 'smooth' });
-                      }
+                        scrollToElement('contact', 80);
                     }, 450);
                   }}
                   className="btn-primary"
