@@ -222,7 +222,57 @@ HG Automation Team
   return transporter.sendMail(mailOptions);
 };
 
+/**
+ * Send OTP verification email
+ * @param {string} email - Recipient email address
+ * @param {string} otp - The 6-digit OTP code
+ * @returns {Promise} - Email send result
+ */
+const sendOTPEmail = async (email, otp) => {
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: `"HG Automation" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: `Your Verification Code - ${otp}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 20px; text-align: center;">
+          <h1 style="color: #2da0d4; margin: 0;">HG Automation</h1>
+          <p style="color: #94a3b8; margin: 5px 0 0;">Email Verification</p>
+        </div>
+
+        <div style="background: #f8fafc; padding: 30px; border: 1px solid #e2e8f0;">
+          <h2 style="color: #1e293b; margin-top: 0;">Your Verification Code</h2>
+
+          <p style="color: #334155; line-height: 1.6;">
+            Use the following code to verify your email address. This code will expire in <strong>5 minutes</strong>.
+          </p>
+
+          <div style="background: #1e293b; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+            <span style="color: #2da0d4; font-size: 36px; font-weight: bold; letter-spacing: 8px;">${otp}</span>
+          </div>
+
+          <p style="color: #64748b; font-size: 13px; line-height: 1.6;">
+            If you did not request this code, please ignore this email. Do not share this code with anyone.
+          </p>
+        </div>
+
+        <div style="background: #1e293b; padding: 15px; text-align: center;">
+          <p style="color: #64748b; margin: 0; font-size: 12px;">
+            &copy; ${new Date().getFullYear()} HG Automation. All rights reserved.
+          </p>
+        </div>
+      </div>
+    `,
+    text: `Your HG Automation verification code is: ${otp}\n\nThis code will expire in 5 minutes.\nDo not share this code with anyone.`
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
 module.exports = {
   sendContactNotification,
-  sendAutoReply
+  sendAutoReply,
+  sendOTPEmail
 };

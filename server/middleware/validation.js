@@ -1,9 +1,24 @@
 /**
  * Validation Middleware
  * Input validation using express-validator
+ * Enhanced with disposable email blocking and Indian phone validation
  */
 
 const { body, validationResult } = require('express-validator');
+
+/**
+ * Disposable/temporary email domains to block
+ */
+const DISPOSABLE_EMAIL_DOMAINS = [
+  'mailinator.com', 'guerrillamail.com', 'tempmail.com', 'yopmail.com',
+  'throwaway.email', 'temp-mail.org', 'fakeinbox.com', 'sharklasers.com',
+  'guerrillamailblock.com', 'grr.la', 'dispostable.com', 'mailnesia.com',
+  'maildrop.cc', 'discard.email', 'trashmail.com', 'trashmail.net',
+  'mytemp.email', 'getnada.com', 'tempail.com', 'mohmal.com',
+  'burnermail.io', 'mailcatch.com', 'tempr.email', 'tempinbox.com',
+  'trash-mail.com', 'harakirimail.com', 'tmail.ws', 'mailnull.com',
+  'jetable.org', 'spam4.me', 'greymail.com'
+];
 
 /**
  * Validation rules for contact form submission
@@ -22,22 +37,58 @@ const contactValidationRules = [
     .withMessage('Email is required')
     .isEmail()
     .withMessage('Please provide a valid email address')
-    .normalizeEmail(),
-
-  body('phone')
-    .optional({ checkFalsy: true })
-    .trim()
-    .matches(/^[\d\s\-\+\(\)]+$/)
-    .withMessage('Please provide a valid phone number')
-    .isLength({ min: 10, max: 20 })
-    .withMessage('Phone number must be between 10 and 20 characters')
+    .normalizeEmail()
     .custom((value) => {
-      const digitCount = (value.match(/\d/g) || []).length;
-      if (digitCount < 7) {
-        throw new Error('Phone number must contain at least 7 digits');
+      // Check for consecutive dots
+      if (/\.{2,}/.test(value)) {
+        throw new Error('Email contains invalid characters');
+      }
+      // Extract and check domain
+      const domain = value.split('@')[1].toLowerCase();
+      const tld = domain.split('.').pop();
+      // TLD must be at least 2 chars and not numbers-only
+      if (tld.length < 2 || /^\d+$/.test(tld)) {
+        throw new Error('Email has an invalid domain');
+      }
+      // Block disposable email domains
+      if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+        throw new Error('Disposable/temporary emails are not allowed. Please use your business or personal email.');
       }
       return true;
     }),
+
+  body('phone')
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .custom((value) => {
+      // Strip formatting characters
+      const stripped = value.replace(/[\s\-\(\)\.]/g, '');
+
+      // Must contain only digits (country code handled separately)
+      if (!/^\d+$/.test(stripped)) {
+        throw new Error('Phone number must contain only digits');
+      }
+
+      // Must be between 4 and 15 digits (international range)
+      if (stripped.length < 4 || stripped.length > 15) {
+        throw new Error('Please provide a valid phone number');
+      }
+
+      // Block all same digits (e.g., 9999999999)
+      if (/^(\d)\1+$/.test(stripped)) {
+        throw new Error('Please provide a real phone number');
+      }
+
+      return true;
+    }),
+
+  body('countryCode')
+    .trim()
+    .notEmpty()
+    .withMessage('Country code is required')
+    .matches(/^\+\d{1,4}$/)
+    .withMessage('Invalid country code format'),
 
   body('company')
     .optional({ checkFalsy: true })

@@ -114,121 +114,190 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Logo Animation - Attractive & Smooth */}
+          {/* 3D Holographic Display */}
           <div className={`hidden lg:flex justify-center items-center transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-            <div className="relative w-[500px] h-[500px] flex items-center justify-center">
+            <div className={`relative w-[500px] h-[500px] flex items-center justify-center transition-all duration-700 ${isVisible ? 'animate-holoReveal' : ''}`} style={{ transitionDelay: '500ms' }}>
 
-              {/* Animated gradient background blob */}
-              <div className="absolute w-80 h-80 animate-morphBlob">
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/30 via-accent/10 to-accent/30 rounded-full blur-[60px] animate-pulse" style={{ animationDuration: '4s' }} />
+              {/* Layer 1: Particle Field */}
+              <div className={`absolute inset-0 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
+                {[
+                  { w: 2, top: '8%', left: '15%', dur: '10s', del: '0s' },
+                  { w: 1, top: '22%', left: '80%', dur: '12s', del: '1s' },
+                  { w: 3, top: '35%', left: '5%', dur: '9s', del: '2s' },
+                  { w: 1, top: '60%', left: '90%', dur: '11s', del: '0.5s' },
+                  { w: 2, top: '75%', left: '70%', dur: '14s', del: '3s' },
+                  { w: 1, top: '85%', left: '25%', dur: '8s', del: '1.5s' },
+                  { w: 2, top: '12%', left: '55%', dur: '13s', del: '4s' },
+                  { w: 1, top: '45%', left: '12%', dur: '10s', del: '2.5s' },
+                  { w: 3, top: '50%', left: '85%', dur: '15s', del: '0.8s' },
+                  { w: 1, top: '90%', left: '50%', dur: '9s', del: '3.5s' },
+                  { w: 2, top: '30%', left: '40%', dur: '11s', del: '1.2s' },
+                  { w: 1, top: '65%', left: '30%', dur: '12s', del: '2.8s' },
+                  { w: 2, top: '18%', left: '68%', dur: '10s', del: '4.5s' },
+                  { w: 1, top: '70%', left: '55%', dur: '13s', del: '1.8s' },
+                ].map((p, i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full bg-accent/60 animate-particleDrift"
+                    style={{
+                      width: `${p.w}px`, height: `${p.w}px`,
+                      top: p.top, left: p.left,
+                      animationDuration: p.dur, animationDelay: p.del,
+                    }}
+                  />
+                ))}
               </div>
 
-              {/* Breathing rings */}
-              <div className="absolute w-[420px] h-[420px] rounded-full border border-accent/20 animate-breathe" />
-              <div className="absolute w-[380px] h-[380px] rounded-full border border-accent/30 animate-breathe" style={{ animationDelay: '0.5s' }} />
-              <div className="absolute w-[340px] h-[340px] rounded-full border border-accent/40 animate-breathe" style={{ animationDelay: '1s' }} />
-
-              {/* Rotating gradient ring */}
-              <div className="absolute w-[300px] h-[300px] animate-spin-slow" style={{ animationDuration: '12s' }}>
-                <svg viewBox="0 0 200 200" className="w-full h-full">
+              {/* Layer 2: Circuit Board Lines */}
+              <div className={`absolute inset-0 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '600ms' }}>
+                <svg viewBox="0 0 500 500" className="w-full h-full" fill="none">
                   <defs>
-                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="rgba(45,160,212,0)" />
-                      <stop offset="50%" stopColor="rgba(45,160,212,0.8)" />
-                      <stop offset="100%" stopColor="rgba(45,160,212,0)" />
+                    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(45,160,212,0.1)" />
+                      <stop offset="100%" stopColor="rgba(45,160,212,0.3)" />
                     </linearGradient>
                   </defs>
-                  <circle cx="100" cy="100" r="95" fill="none" stroke="url(#ringGradient)" strokeWidth="2" />
+                  {/* PCB traces */}
+                  <path d="M50 100 L120 100 L120 180 L200 180" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  <path d="M450 80 L380 80 L380 150 L320 150" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  <path d="M60 350 L130 350 L130 300 L190 300" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  <path d="M440 400 L370 400 L370 340 L310 340" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  <path d="M100 450 L100 420 L180 420" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  <path d="M400 450 L400 420 L330 420" stroke="url(#circuitGrad)" strokeWidth="1" />
+                  {/* Junction dots */}
+                  <circle cx="120" cy="100" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" />
+                  <circle cx="380" cy="80" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" style={{ animationDelay: '0.5s' }} />
+                  <circle cx="130" cy="350" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" style={{ animationDelay: '1s' }} />
+                  <circle cx="370" cy="400" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" style={{ animationDelay: '1.5s' }} />
+                  {/* Traveling data pulse dot 1 */}
+                  <circle r="2" fill="rgba(45,160,212,0.9)">
+                    <animateMotion dur="4s" repeatCount="indefinite" path="M50 100 L120 100 L120 180 L200 180" />
+                  </circle>
+                  {/* Traveling data pulse dot 2 */}
+                  <circle r="2" fill="rgba(45,160,212,0.9)">
+                    <animateMotion dur="5s" repeatCount="indefinite" path="M450 80 L380 80 L380 150 L320 150" begin="1s" />
+                  </circle>
                 </svg>
               </div>
 
-              {/* Glowing arc */}
-              <div className="absolute w-[260px] h-[260px] animate-spin-slow" style={{ animationDuration: '8s', animationDirection: 'reverse' }}>
-                <svg viewBox="0 0 200 200" className="w-full h-full">
+              {/* Layer 3: Holographic Base Platform */}
+              <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[320px] transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '800ms' }}>
+                <svg viewBox="0 0 320 60" className="w-full animate-holoPlatformPulse">
                   <defs>
-                    <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(45,160,212,0)" />
-                      <stop offset="50%" stopColor="rgba(45,160,212,1)" />
-                      <stop offset="100%" stopColor="rgba(45,160,212,0)" />
+                    <linearGradient id="platformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(45,160,212,0.4)" />
+                      <stop offset="100%" stopColor="rgba(45,160,212,0.05)" />
                     </linearGradient>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
                   </defs>
-                  <path d="M 100 10 A 90 90 0 0 1 190 100" fill="none" stroke="url(#arcGradient)" strokeWidth="3" strokeLinecap="round" filter="url(#glow)" />
+                  <polygon points="60,0 260,0 320,60 0,60" fill="url(#platformGrad)" />
+                  <line x1="60" y1="0" x2="260" y2="0" stroke="rgba(45,160,212,0.8)" strokeWidth="2">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
+                  </line>
                 </svg>
               </div>
 
-              {/* Floating particles */}
-              <div className="absolute w-2 h-2 bg-accent rounded-full animate-floatSmooth" style={{ top: '15%', left: '25%' }} />
-              <div className="absolute w-1.5 h-1.5 bg-white/70 rounded-full animate-floatSmooth" style={{ top: '75%', left: '20%', animationDelay: '1s' }} />
-              <div className="absolute w-2 h-2 bg-accent/70 rounded-full animate-floatSmooth" style={{ top: '20%', right: '20%', animationDelay: '2s' }} />
-              <div className="absolute w-1.5 h-1.5 bg-white/50 rounded-full animate-floatSmooth" style={{ top: '80%', right: '25%', animationDelay: '1.5s' }} />
-              <div className="absolute w-1 h-1 bg-accent/60 rounded-full animate-floatSmooth" style={{ top: '50%', left: '10%', animationDelay: '0.5s' }} />
-              <div className="absolute w-1 h-1 bg-white/40 rounded-full animate-floatSmooth" style={{ top: '45%', right: '12%', animationDelay: '2.5s' }} />
+              {/* Layer 4: Projection Cone Lines */}
+              <div className={`absolute inset-0 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '800ms' }}>
+                <svg viewBox="0 0 500 500" className="w-full h-full" fill="none">
+                  <defs>
+                    <linearGradient id="coneGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="rgba(45,160,212,0.6)" />
+                      <stop offset="100%" stopColor="rgba(45,160,212,0)" />
+                    </linearGradient>
+                  </defs>
+                  <line x1="150" y1="490" x2="200" y2="200" stroke="url(#coneGrad)" strokeWidth="1" strokeDasharray="6 4" className="animate-holoBeamShimmer" />
+                  <line x1="350" y1="490" x2="300" y2="200" stroke="url(#coneGrad)" strokeWidth="1" strokeDasharray="6 4" className="animate-holoBeamShimmer" style={{ animationDelay: '0.5s' }} />
+                </svg>
+              </div>
 
-              {/* Center logo with glass effect */}
-              <div className="relative z-10 group cursor-pointer">
-                {/* Glow behind logo - intensifies on hover */}
-                <div className="absolute -inset-8 bg-accent/20 rounded-full blur-2xl animate-pulse group-hover:bg-accent/40 group-hover:blur-3xl group-hover:-inset-12 transition-all duration-700" style={{ animationDuration: '3s' }} />
-
-                {/* Premium rotating arcs on hover */}
-                <div className="absolute -inset-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  {/* Arc 1 */}
-                  <div className="absolute inset-0 animate-spin-slow" style={{ animationDuration: '3s' }}>
-                    <svg viewBox="0 0 200 200" className="w-full h-full">
-                      <defs>
-                        <linearGradient id="arcGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="rgba(45,160,212,0)" />
-                          <stop offset="50%" stopColor="rgba(45,160,212,1)" />
-                          <stop offset="100%" stopColor="rgba(45,160,212,0)" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M 100 15 A 85 85 0 0 1 185 100" fill="none" stroke="url(#arcGrad1)" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                  {/* Arc 2 - opposite */}
-                  <div className="absolute inset-0 animate-spin-slow" style={{ animationDuration: '3s', animationDirection: 'reverse' }}>
-                    <svg viewBox="0 0 200 200" className="w-full h-full">
-                      <path d="M 100 185 A 85 85 0 0 1 15 100" fill="none" stroke="url(#arcGrad1)" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                  {/* Orbiting dot */}
-                  <div className="absolute inset-0 animate-spin" style={{ animationDuration: '2s' }}>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-accent rounded-full shadow-[0_0_15px_rgba(45,160,212,1)]" />
-                  </div>
+              {/* Layer 5: Hexagonal Frames */}
+              <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`} style={{ transitionDelay: '1000ms' }}>
+                {/* Outer hexagon - clockwise */}
+                <div className="absolute w-[320px] h-[320px] animate-spin-slow" style={{ animationDuration: '20s' }}>
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <polygon
+                      points="100,10 178,55 178,145 100,190 22,145 22,55"
+                      fill="none" stroke="rgba(45,160,212,0.2)" strokeWidth="1"
+                    />
+                  </svg>
                 </div>
+                {/* Inner hexagon - counter-clockwise */}
+                <div className="absolute w-[260px] h-[260px] animate-spin-slow" style={{ animationDuration: '15s', animationDirection: 'reverse' }}>
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <polygon
+                      points="100,20 170,60 170,140 100,180 30,140 30,60"
+                      fill="none" stroke="rgba(45,160,212,0.15)" strokeWidth="1" strokeDasharray="8 4"
+                    />
+                  </svg>
+                </div>
+              </div>
 
-                {/* Glass container */}
-                <div className="relative bg-white/5 backdrop-blur-sm p-10 rounded-full border border-white/10 group-hover:border-accent/60 group-hover:bg-white/15 group-hover:shadow-[0_0_60px_rgba(45,160,212,0.4)] transition-all duration-700">
+              {/* Layer 6: Scan Line */}
+              <div className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1500ms' }}>
+                <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-accent/60 to-transparent animate-scan" />
+              </div>
 
-                  {/* Shine sweep on hover */}
-                  <div className="absolute inset-0 rounded-full overflow-hidden">
-                    <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-1000" style={{ transform: 'skewX(-20deg) translateX(-100%)' }} />
-                  </div>
+              {/* Layer 7: Perspective Grid */}
+              <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 w-[280px] h-[80px] overflow-hidden transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '700ms', perspective: '200px' }}>
+                <div
+                  className="w-full h-full animate-gridScroll"
+                  style={{
+                    transform: 'rotateX(60deg)',
+                    transformOrigin: 'center bottom',
+                    backgroundImage: `
+                      linear-gradient(rgba(45,160,212,0.2) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(45,160,212,0.2) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '20px 20px',
+                  }}
+                />
+              </div>
 
-                  {/* Logo with animations */}
+              {/* Layer 8: Logo - Center Focal Point */}
+              <div className={`relative z-10 group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} style={{ transitionDelay: '1100ms' }}>
+                {/* Glow backdrop */}
+                <div className="absolute -inset-10 bg-accent/15 rounded-full blur-3xl animate-pulse-slow" />
+
+                {/* Glass HUD Frame */}
+                <div className="relative bg-white/5 backdrop-blur-md p-10 rounded-2xl border border-accent/20 shadow-[0_0_40px_rgba(45,160,212,0.15)] group-hover:border-accent/50 group-hover:shadow-[0_0_80px_rgba(45,160,212,0.3)] transition-all duration-700">
+                  {/* Corner accents on HUD frame */}
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-accent/40 rounded-tl" />
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-accent/40 rounded-tr" />
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-accent/40 rounded-bl" />
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-accent/40 rounded-br" />
+
+                  {/* Logo */}
                   <img
                     src={logoImage}
                     alt="HG Automation"
-                    className="w-44 h-auto drop-shadow-[0_0_20px_rgba(45,160,212,0.5)] group-hover:drop-shadow-[0_0_50px_rgba(45,160,212,1)] transition-all duration-700 group-hover:scale-[1.15] group-hover:rotate-3"
+                    className="w-44 h-auto animate-holoFloat drop-shadow-[0_0_25px_rgba(45,160,212,0.6)] group-hover:drop-shadow-[0_0_50px_rgba(45,160,212,1)] transition-all duration-700"
                   />
                 </div>
+              </div>
 
-                {/* Ripple effects on hover - smooth expansion */}
-                <div className="absolute inset-0 rounded-full border-2 border-accent/0 group-hover:border-accent/50 group-hover:scale-[1.15] transition-all duration-500 ease-out opacity-0 group-hover:opacity-100" />
-                <div className="absolute inset-0 rounded-full border border-accent/0 group-hover:border-accent/30 group-hover:scale-[1.3] transition-all duration-700 ease-out delay-100 opacity-0 group-hover:opacity-100" />
-                <div className="absolute inset-0 rounded-full border border-accent/0 group-hover:border-accent/15 group-hover:scale-[1.5] transition-all duration-1000 ease-out delay-200 opacity-0 group-hover:opacity-100" />
+              {/* Layer 9: Holographic Glitch Overlay */}
+              <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '2000ms' }}>
+                <div className="absolute inset-0 animate-holoGlitch" />
+              </div>
 
-                {/* Floating dots appear on hover */}
-                <div className="absolute -top-4 left-1/2 w-2 h-2 bg-accent rounded-full opacity-0 group-hover:opacity-100 group-hover:-top-8 transition-all duration-700 shadow-[0_0_10px_rgba(45,160,212,0.8)]" />
-                <div className="absolute -bottom-4 left-1/2 w-2 h-2 bg-accent rounded-full opacity-0 group-hover:opacity-100 group-hover:-bottom-8 transition-all duration-700 delay-100 shadow-[0_0_10px_rgba(45,160,212,0.8)]" />
-                <div className="absolute top-1/2 -left-4 w-2 h-2 bg-accent rounded-full opacity-0 group-hover:opacity-100 group-hover:-left-8 transition-all duration-700 delay-200 shadow-[0_0_10px_rgba(45,160,212,0.8)]" />
-                <div className="absolute top-1/2 -right-4 w-2 h-2 bg-accent rounded-full opacity-0 group-hover:opacity-100 group-hover:-right-8 transition-all duration-700 delay-300 shadow-[0_0_10px_rgba(45,160,212,0.8)]" />
+              {/* Layer 10: HUD Corner Brackets */}
+              <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1200ms' }}>
+                {/* Top-left */}
+                <svg className="absolute top-4 left-4 w-8 h-8 animate-cornerFadeIn" viewBox="0 0 32 32" fill="none">
+                  <path d="M0 12 L0 0 L12 0" stroke="rgba(45,160,212,0.6)" strokeWidth="2" />
+                </svg>
+                {/* Top-right */}
+                <svg className="absolute top-4 right-4 w-8 h-8 animate-cornerFadeIn" viewBox="0 0 32 32" fill="none" style={{ animationDelay: '0.1s' }}>
+                  <path d="M20 0 L32 0 L32 12" stroke="rgba(45,160,212,0.6)" strokeWidth="2" />
+                </svg>
+                {/* Bottom-left */}
+                <svg className="absolute bottom-4 left-4 w-8 h-8 animate-cornerFadeIn" viewBox="0 0 32 32" fill="none" style={{ animationDelay: '0.2s' }}>
+                  <path d="M0 20 L0 32 L12 32" stroke="rgba(45,160,212,0.6)" strokeWidth="2" />
+                </svg>
+                {/* Bottom-right */}
+                <svg className="absolute bottom-4 right-4 w-8 h-8 animate-cornerFadeIn" viewBox="0 0 32 32" fill="none" style={{ animationDelay: '0.3s' }}>
+                  <path d="M20 32 L32 32 L32 20" stroke="rgba(45,160,212,0.6)" strokeWidth="2" />
+                </svg>
               </div>
 
             </div>

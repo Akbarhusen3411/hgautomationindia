@@ -12,6 +12,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const serviceRoutes = require('./routes/serviceRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const otpRoutes = require('./routes/otpRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -63,8 +64,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Rate limit for OTP endpoints
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 OTP requests per 15 min
+  message: { error: 'Too many OTP requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // API Routes
 app.use('/api/services', serviceRoutes);
+app.use('/api/otp', otpLimiter, otpRoutes);
 app.use('/api/contact', contactLimiter, contactRoutes);
 
 // Health check endpoint
@@ -86,5 +97,6 @@ app.listen(PORT, () => {
   console.log('  GET  /api/health    - Health check');
   console.log('  GET  /api/services  - Get all services');
   console.log('  GET  /api/services/:id - Get service by ID');
+  console.log('  POST /api/otp/*     - OTP send/verify endpoints');
   console.log('  POST /api/contact   - Submit contact form');
 });

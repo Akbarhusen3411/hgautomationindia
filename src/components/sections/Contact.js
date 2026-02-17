@@ -1,16 +1,75 @@
 /**
  * Contact Section Component
  * Professional dark gradient theme with attractive contact form
+ * Professional dark gradient theme with attractive contact form
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { contactApi } from '../../services/api';
 import { ScrollReveal, StaggerContainer } from '../common/ScrollAnimation';
+import countries from '../../data/countries';
+
+// Disposable/temporary email domains to block
+const DISPOSABLE_EMAIL_DOMAINS = [
+  'mailinator.com', 'guerrillamail.com', 'tempmail.com', 'yopmail.com',
+  'throwaway.email', 'temp-mail.org', 'fakeinbox.com', 'sharklasers.com',
+  'guerrillamailblock.com', 'grr.la', 'dispostable.com', 'mailnesia.com',
+  'maildrop.cc', 'discard.email', 'trashmail.com', 'trashmail.net',
+  'mytemp.email', 'getnada.com', 'tempail.com', 'mohmal.com',
+  'burnermail.io', 'mailcatch.com', 'tempr.email', 'tempinbox.com',
+  'trash-mail.com', 'harakirimail.com', 'tmail.ws', 'mailnull.com',
+  'jetable.org', 'spam4.me', 'greymail.com'
+];
+
+/**
+ * Validate email: format + disposable domain check + TLD check
+ */
+const validateEmail = (email) => {
+  if (!email.trim()) return 'Email is required';
+
+  const emailRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) return 'Please enter a valid email address';
+
+  if (/\.{2,}/.test(email)) return 'Email contains invalid characters';
+
+  const domain = email.split('@')[1].toLowerCase();
+  const tld = domain.split('.').pop();
+
+  if (tld.length < 2 || /^\d+$/.test(tld)) return 'Email has an invalid domain';
+
+  if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+    return 'Disposable/temporary emails are not allowed. Please use your business or personal email.';
+  }
+
+  return null;
+};
+
+/**
+ * Validate phone number based on selected country
+ */
+const validatePhone = (phone, selectedCountry) => {
+  if (!phone.trim()) return 'Phone number is required';
+
+  const stripped = phone.replace(/[\s\-().]/g, '');
+
+  if (!/^\d+$/.test(stripped)) return 'Phone number must contain only digits';
+
+  if (stripped.length < selectedCountry.minDigits || stripped.length > selectedCountry.maxDigits) {
+    if (selectedCountry.minDigits === selectedCountry.maxDigits) {
+      return `Phone number must be exactly ${selectedCountry.minDigits} digits for ${selectedCountry.name}`;
+    }
+    return `Phone number must be ${selectedCountry.minDigits}-${selectedCountry.maxDigits} digits for ${selectedCountry.name}`;
+  }
+
+  if (/^(\d)\1+$/.test(stripped)) return 'Please enter a real phone number';
+
+  return null;
+};
+
 
 const Contact = () => {
   const [scrollY, setScrollY] = useState(0);
 
-  // Parallax effect for background elements
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -26,6 +85,7 @@ const Contact = () => {
     company: '',
     subject: '',
     message: '',
+    countryCode: '+91',
   });
 
   const [focusedField, setFocusedField] = useState(null);
@@ -33,20 +93,87 @@ const Contact = () => {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
+  const [fieldValidated, setFieldValidated] = useState({});
+
+  // Country dropdown state
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]); // India default
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState('');
+  const countryDropdownRef = useRef(null);
+
+  // Close country dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target)) {
+        setCountryDropdownOpen(false);
+        setCountrySearch('');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: null }));
+      setFieldValidated(prev => ({ ...prev, [name]: false }));
+    }
+  };
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setFormData(prev => ({ ...prev, countryCode: country.dialCode }));
+    setCountryDropdownOpen(false);
+    setCountrySearch('');
+  };
+
+  const filteredCountries = countries.filter(c => {
+    const search = countrySearch.toLowerCase();
+    return c.name.toLowerCase().includes(search) ||
+           c.dialCode.includes(search) ||
+           c.code.toLowerCase().includes(search);
+  });
+
+  // Real-time validation on blur
+  const handleBlur = (fieldName) => {
+    setFocusedField(null);
+    let fieldError = null;
+
+    if (fieldName === 'email') {
+      fieldError = validateEmail(formData.email);
+    } else if (fieldName === 'phone') {
+      fieldError = validatePhone(formData.phone, selectedCountry);
+    } else if (fieldName === 'name') {
+      if (!formData.name.trim()) fieldError = 'Name is required';
+    } else if (fieldName === 'subject') {
+      if (!formData.subject.trim()) fieldError = 'Subject is required';
+    } else if (fieldName === 'message') {
+      if (!formData.message.trim()) fieldError = 'Message is required';
+      else if (formData.message.length < 20) fieldError = 'Message must be at least 20 characters';
+    }
+
+    if (fieldError) {
+      setValidationErrors(prev => ({ ...prev, [fieldName]: fieldError }));
+      setFieldValidated(prev => ({ ...prev, [fieldName]: false }));
+    } else if (formData[fieldName] && formData[fieldName].trim()) {
+      setValidationErrors(prev => ({ ...prev, [fieldName]: null }));
+      setFieldValidated(prev => ({ ...prev, [fieldName]: true }));
     }
   };
 
   const validateForm = () => {
     const errors = {};
+
     if (!formData.name.trim()) errors.name = 'Name is required';
-    if (!formData.email.trim()) errors.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = 'Invalid email';
+
+    const emailErr = validateEmail(formData.email);
+    if (emailErr) errors.email = emailErr;
+
+    const phoneErr = validatePhone(formData.phone, selectedCountry);
+    if (phoneErr) errors.phone = phoneErr;
+
     if (!formData.subject.trim()) errors.subject = 'Subject is required';
     if (!formData.message.trim()) errors.message = 'Message is required';
     else if (formData.message.length < 20) errors.message = 'Message must be at least 20 characters';
@@ -64,9 +191,16 @@ const Contact = () => {
 
     setLoading(true);
     try {
-      const response = await contactApi.submit(formData);
+      const submitData = {
+        ...formData,
+        phone: formData.phone.replace(/[\s\-().]/g, ''),
+        countryCode: selectedCountry.dialCode,
+      };
+      const response = await contactApi.submit(submitData);
       setSuccess(response.message);
-      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', subject: '', message: '', countryCode: '+91' });
+      setFieldValidated({});
+      setSelectedCountry(countries[0]);
     } catch (err) {
       setError(err.error || 'Failed to send message. Please try again.');
     } finally {
@@ -117,57 +251,6 @@ const Contact = () => {
     },
   ];
 
-  // Form field configurations
-  const formFields = [
-    {
-      name: 'name',
-      label: 'Full Name',
-      type: 'text',
-      placeholder: 'John Doe',
-      required: true,
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      ),
-    },
-    {
-      name: 'email',
-      label: 'Email Address',
-      type: 'email',
-      placeholder: 'john@company.com',
-      required: true,
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-    {
-      name: 'phone',
-      label: 'Phone Number',
-      type: 'tel',
-      placeholder: '+91 98765 43210',
-      required: false,
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
-    },
-    {
-      name: 'company',
-      label: 'Company Name',
-      type: 'text',
-      placeholder: 'Your Company Ltd.',
-      required: false,
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      ),
-    },
-  ];
 
   return (
     <section id="contact" className="py-24 bg-gradient-to-br from-primary-dark via-primary to-primary-light relative overflow-hidden">
@@ -325,52 +408,197 @@ const Contact = () => {
 
                 <form onSubmit={handleSubmit} noValidate>
                   <div className="grid md:grid-cols-2 gap-2.5">
-                    {/* Dynamic Form Fields */}
-                    {formFields.map((field) => (
-                      <div key={field.name} className="form-field-group">
-                        <label className="block text-xs font-semibold text-steel-700 mb-1">
-                          {field.label} {field.required && <span className="text-accent">*</span>}
-                        </label>
-                        <div className={`form-input-wrapper ${focusedField === field.name ? 'focused' : ''} ${validationErrors[field.name] ? 'error' : ''}`}>
-                          <span className="form-input-icon">
-                            {field.icon}
-                          </span>
-                          <input
-                            type={field.type}
-                            name={field.name}
-                            value={formData[field.name]}
-                            onChange={handleChange}
-                            onFocus={() => setFocusedField(field.name)}
-                            onBlur={() => setFocusedField(null)}
-                            className="form-input-field"
-                            placeholder={field.placeholder}
-                            disabled={loading}
-                          />
-                          {formData[field.name] && !validationErrors[field.name] && (
-                            <span className="form-input-valid">
-                              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </span>
-                          )}
-                        </div>
-                        {validationErrors[field.name] && (
-                          <p className="form-error-message">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    {/* Row 1: Name */}
+                    <div className="form-field-group">
+                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                        Full Name <span className="text-accent">*</span>
+                      </label>
+                      <div className={`form-input-wrapper ${focusedField === 'name' ? 'focused' : ''} ${validationErrors.name ? 'error' : ''} ${fieldValidated.name ? 'valid' : ''}`}>
+                        <span className="form-input-icon">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </span>
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          onFocus={() => setFocusedField('name')}
+                          onBlur={() => handleBlur('name')}
+                          className="form-input-field"
+                          placeholder="John Doe"
+                          disabled={loading}
+                        />
+                        {fieldValidated.name && !validationErrors.name && (
+                          <span className="form-input-valid">
+                            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
-                            {validationErrors[field.name]}
-                          </p>
+                          </span>
                         )}
                       </div>
-                    ))}
+                      {validationErrors.name && (
+                        <p className="form-error-message">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          {validationErrors.name}
+                        </p>
+                      )}
+                    </div>
 
-                    {/* Subject - Full Width */}
+                    {/* Row 1: Company */}
+                    <div className="form-field-group">
+                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                        Company Name
+                      </label>
+                      <div className={`form-input-wrapper ${focusedField === 'company' ? 'focused' : ''} ${fieldValidated.company ? 'valid' : ''}`}>
+                        <span className="form-input-icon">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </span>
+                        <input
+                          type="text"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                          onFocus={() => setFocusedField('company')}
+                          onBlur={() => setFocusedField(null)}
+                          className="form-input-field"
+                          placeholder="Your Company Ltd."
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 2: Email */}
+                    <div className="form-field-group">
+                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                        Email Address <span className="text-accent">*</span>
+                      </label>
+                      <div className={`form-input-wrapper ${focusedField === 'email' ? 'focused' : ''} ${validationErrors.email ? 'error' : ''} ${fieldValidated.email ? 'valid' : ''}`}>
+                        <span className="form-input-icon">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        </span>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          onFocus={() => setFocusedField('email')}
+                          onBlur={() => handleBlur('email')}
+                          className="form-input-field"
+                          placeholder="john@company.com"
+                          disabled={loading}
+                        />
+                        {fieldValidated.email && !validationErrors.email && (
+                          <span className="form-input-valid">
+                            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </span>
+                        )}
+                      </div>
+                      {validationErrors.email && (
+                        <p className="form-error-message">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          {validationErrors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Row 2: Phone */}
+                    <div className="form-field-group">
+                      <label className="block text-xs font-semibold text-steel-700 mb-1">
+                        Phone Number <span className="text-accent">*</span>
+                      </label>
+                      <div className={`form-input-wrapper ${focusedField === 'phone' ? 'focused' : ''} ${validationErrors.phone ? 'error' : ''} ${fieldValidated.phone ? 'valid' : ''}`}>
+                        {/* Country Code Selector (inline) */}
+                        <div className="relative" ref={countryDropdownRef}>
+                          <div
+                            className={`country-selector-inline ${countryDropdownOpen ? 'open' : ''}`}
+                            onClick={() => !loading && setCountryDropdownOpen(!countryDropdownOpen)}
+                          >
+                            <span className="flag">{selectedCountry.flag}</span>
+                            <span className="dial-code">{selectedCountry.dialCode}</span>
+                            <span className="arrow">&#9662;</span>
+                          </div>
+
+                          {countryDropdownOpen && (
+                            <div className="country-dropdown">
+                              <div className="country-dropdown-search">
+                                <input
+                                  type="text"
+                                  placeholder="Search country..."
+                                  value={countrySearch}
+                                  onChange={(e) => setCountrySearch(e.target.value)}
+                                  autoFocus
+                                />
+                              </div>
+                              <div className="country-dropdown-list">
+                                {filteredCountries.map((country) => (
+                                  <div
+                                    key={country.code}
+                                    className={`country-dropdown-item ${country.code === selectedCountry.code ? 'selected' : ''}`}
+                                    onClick={() => handleCountrySelect(country)}
+                                  >
+                                    <span className="flag">{country.flag}</span>
+                                    <span className="name">{country.name}</span>
+                                    <span className="code">{country.dialCode}</span>
+                                  </div>
+                                ))}
+                                {filteredCountries.length === 0 && (
+                                  <div className="country-dropdown-item" style={{ justifyContent: 'center', color: '#94a3b8', cursor: 'default' }}>
+                                    No countries found
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <span className="country-divider" />
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          onFocus={() => setFocusedField('phone')}
+                          onBlur={() => handleBlur('phone')}
+                          className="form-input-field"
+                          placeholder={`${selectedCountry.minDigits} digit number`}
+                          disabled={loading}
+                        />
+                        {fieldValidated.phone && !validationErrors.phone && (
+                          <span className="form-input-valid">
+                            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </span>
+                        )}
+                      </div>
+                      {validationErrors.phone && (
+                        <p className="form-error-message">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          {validationErrors.phone}
+                        </p>
+                      )}
+
+                    </div>
+
+                    {/* Row 4: Subject - Full Width */}
                     <div className="md:col-span-2 form-field-group">
                       <label className="block text-xs font-semibold text-steel-700 mb-1">
                         Subject <span className="text-accent">*</span>
                       </label>
-                      <div className={`form-input-wrapper ${focusedField === 'subject' ? 'focused' : ''} ${validationErrors.subject ? 'error' : ''}`}>
+                      <div className={`form-input-wrapper ${focusedField === 'subject' ? 'focused' : ''} ${validationErrors.subject ? 'error' : ''} ${fieldValidated.subject ? 'valid' : ''}`}>
                         <span className="form-input-icon">
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -382,11 +610,18 @@ const Contact = () => {
                           value={formData.subject}
                           onChange={handleChange}
                           onFocus={() => setFocusedField('subject')}
-                          onBlur={() => setFocusedField(null)}
+                          onBlur={() => handleBlur('subject')}
                           className="form-input-field"
                           placeholder="How can we help you?"
                           disabled={loading}
                         />
+                        {fieldValidated.subject && !validationErrors.subject && (
+                          <span className="form-input-valid">
+                            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </span>
+                        )}
                       </div>
                       {validationErrors.subject && (
                         <p className="form-error-message">
@@ -398,7 +633,7 @@ const Contact = () => {
                       )}
                     </div>
 
-                    {/* Message - Full Width */}
+                    {/* Row 5: Message - Full Width */}
                     <div className="md:col-span-2 form-field-group">
                       <label className="block text-xs font-semibold text-steel-700 mb-1">
                         Message <span className="text-accent">*</span>
@@ -414,7 +649,7 @@ const Contact = () => {
                           value={formData.message}
                           onChange={handleChange}
                           onFocus={() => setFocusedField('message')}
-                          onBlur={() => setFocusedField(null)}
+                          onBlur={() => handleBlur('message')}
                           rows={3}
                           className="form-textarea-field"
                           placeholder="Tell us about your project requirements, automation needs, or any questions you have..."
@@ -437,7 +672,7 @@ const Contact = () => {
                       )}
                     </div>
 
-                    {/* Submit Button */}
+                    {/* Row 6: Submit Button */}
                     <div className="md:col-span-2">
                       <button
                         type="submit"

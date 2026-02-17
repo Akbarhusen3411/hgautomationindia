@@ -1,6 +1,6 @@
 /**
  * Services Section Component
- * Displays automation services with smooth scroll animations
+ * Dark futuristic tech theme with circuit decorations
  */
 
 import React, { useState, useEffect } from 'react';
@@ -13,7 +13,6 @@ const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
-  // Parallax effect for background elements (throttled with rAF)
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -162,80 +161,101 @@ const Services = () => {
 
   return (
     <>
-      <section id="services" className="py-24 relative overflow-hidden">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50"></div>
+      <section id="services" className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+        {/* Dark gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-primary-dark"></div>
 
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232da0d4' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        {/* Subtle grid pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `
+            linear-gradient(rgba(45,160,212,0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45,160,212,0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
         }}></div>
 
-        {/* Decorative Gradient Orbs with Parallax */}
+        {/* Gradient orbs with parallax */}
         <div
-          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-accent/10 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-0 left-0 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-br from-accent/10 to-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
           style={{ transform: `translate(-50%, calc(-50% + ${scrollY * 0.1}px))` }}
         ></div>
         <div
-          className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 to-accent/10 rounded-full blur-3xl"
+          className="absolute top-1/2 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-bl from-primary/8 to-accent/10 rounded-full blur-3xl"
           style={{ transform: `translate(33%, ${scrollY * -0.05}px)` }}
         ></div>
         <div
-          className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-blue-500/5 to-accent/10 rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/3 w-56 sm:w-72 h-56 sm:h-72 bg-gradient-to-tr from-accent/5 to-cyan-500/10 rounded-full blur-3xl"
           style={{ transform: `translateY(calc(50% + ${scrollY * 0.08}px))` }}
         ></div>
 
-        {/* Floating Geometric Shapes */}
-        <div className="absolute top-20 right-20 w-20 h-20 border border-accent/20 rounded-2xl rotate-12 animate-float hidden lg:block" style={{ animationDuration: '6s' }}></div>
-        <div className="absolute bottom-32 left-16 w-16 h-16 border border-primary/10 rounded-full animate-float hidden lg:block" style={{ animationDelay: '1s', animationDuration: '7s' }}></div>
-        <div className="absolute top-1/3 left-10 w-4 h-4 bg-accent/30 rounded-full animate-pulse" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute bottom-1/4 right-24 w-3 h-3 bg-primary/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s', animationDuration: '3.5s' }}></div>
+        {/* Circuit line decorations - left side */}
+        <div className="absolute top-24 left-0 w-48 opacity-20 pointer-events-none hidden lg:block">
+          <svg viewBox="0 0 200 300" fill="none" className="w-full">
+            <path d="M0 40 L60 40 L60 100 L120 100" stroke="rgba(45,160,212,0.5)" strokeWidth="1" />
+            <path d="M0 120 L40 120 L40 180 L100 180" stroke="rgba(45,160,212,0.4)" strokeWidth="1" />
+            <path d="M0 220 L80 220 L80 260 L140 260" stroke="rgba(45,160,212,0.3)" strokeWidth="1" />
+            <circle cx="60" cy="40" r="3" fill="rgba(45,160,212,0.6)" className="animate-dataPulse" />
+            <circle cx="40" cy="120" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" style={{ animationDelay: '0.7s' }} />
+            <circle cx="80" cy="220" r="3" fill="rgba(45,160,212,0.4)" className="animate-dataPulse" style={{ animationDelay: '1.4s' }} />
+          </svg>
+        </div>
 
-        {/* Additional Floating Bubbles */}
-        <div className="absolute top-40 left-1/4 w-6 h-6 bg-gradient-to-br from-accent/25 to-cyan-500/20 rounded-full animate-float blur-[1px]" style={{ animationDelay: '0.3s', animationDuration: '8s' }}></div>
-        <div className="absolute top-1/4 right-1/3 w-5 h-5 bg-gradient-to-br from-cyan-400/20 to-accent/15 rounded-full animate-float" style={{ animationDelay: '1.5s', animationDuration: '7s' }}></div>
-        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ animationDelay: '2s', animationDuration: '4s' }}></div>
-        <div className="absolute top-2/3 right-16 w-8 h-8 border border-cyan-500/15 rounded-full animate-float hidden lg:block" style={{ animationDelay: '0.8s', animationDuration: '9s' }}></div>
-        <div className="absolute bottom-20 right-1/4 w-4 h-4 bg-gradient-to-tr from-primary/15 to-accent/20 rounded-full animate-float" style={{ animationDelay: '2.5s', animationDuration: '6s' }}></div>
-        <div className="absolute top-16 left-1/3 w-2 h-2 bg-cyan-500/30 rounded-full animate-pulse" style={{ animationDelay: '1.2s', animationDuration: '3s' }}></div>
-        <div className="absolute bottom-1/2 left-8 w-5 h-5 border border-accent/25 rounded-full animate-float hidden lg:block" style={{ animationDelay: '3s', animationDuration: '8s' }}></div>
-        <div className="absolute top-1/2 right-8 w-3 h-3 bg-gradient-to-bl from-accent/30 to-transparent rounded-full animate-pulse" style={{ animationDelay: '0.7s', animationDuration: '4s' }}></div>
-        <div className="absolute bottom-40 left-1/2 w-6 h-6 border border-primary/10 rounded-lg rotate-45 animate-float hidden lg:block" style={{ animationDelay: '1.8s', animationDuration: '10s' }}></div>
-        <div className="absolute top-3/4 left-20 w-2 h-2 bg-accent/35 rounded-full animate-pulse" style={{ animationDelay: '2.2s', animationDuration: '3.5s' }}></div>
-        <div className="absolute top-28 right-1/4 w-4 h-4 bg-gradient-to-r from-cyan-400/20 to-accent/25 rounded-full animate-float" style={{ animationDelay: '0.5s', animationDuration: '7s' }}></div>
-        <div className="absolute bottom-16 right-1/3 w-3 h-3 bg-primary/15 rounded-full animate-pulse" style={{ animationDelay: '1.7s', animationDuration: '4s' }}></div>
+        {/* Circuit line decorations - right side */}
+        <div className="absolute top-40 right-0 w-48 opacity-20 pointer-events-none hidden lg:block">
+          <svg viewBox="0 0 200 300" fill="none" className="w-full">
+            <path d="M200 60 L140 60 L140 120 L80 120" stroke="rgba(45,160,212,0.5)" strokeWidth="1" />
+            <path d="M200 180 L160 180 L160 240 L100 240" stroke="rgba(45,160,212,0.4)" strokeWidth="1" />
+            <circle cx="140" cy="60" r="3" fill="rgba(45,160,212,0.6)" className="animate-dataPulse" style={{ animationDelay: '0.3s' }} />
+            <circle cx="160" cy="180" r="3" fill="rgba(45,160,212,0.5)" className="animate-dataPulse" style={{ animationDelay: '1s' }} />
+          </svg>
+        </div>
 
-        {/* Grid Lines Decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none hidden lg:block">
-          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-accent/10 to-transparent"></div>
-          <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
+        {/* Chevron arrows decoration - right */}
+        <div className="absolute top-1/4 right-6 sm:right-12 opacity-15 pointer-events-none hidden md:flex flex-row gap-1">
+          {[...Array(6)].map((_, i) => (
+            <svg key={i} className="w-3 h-4 text-accent" fill="currentColor" viewBox="0 0 12 16" style={{ animationDelay: `${i * 0.1}s` }}>
+              <path d="M2 0 L10 8 L2 16 L4 8 Z" opacity={1 - i * 0.12} />
+            </svg>
+          ))}
+        </div>
+
+        {/* Dot grid patterns */}
+        <div className="absolute top-32 left-1/4 grid grid-cols-4 gap-2 opacity-10 pointer-events-none hidden lg:grid">
+          {[...Array(16)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 bg-accent rounded-full" />
+          ))}
+        </div>
+        <div className="absolute bottom-32 right-1/4 grid grid-cols-3 gap-2 opacity-10 pointer-events-none hidden lg:grid">
+          {[...Array(9)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 bg-accent rounded-full" />
+          ))}
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Section Header with Scroll Reveal */}
-          <div className="text-center mb-16">
+          {/* Section Header */}
+          <div className="text-center mb-10 sm:mb-14 lg:mb-16">
             <ScrollReveal animation="fade-down" duration={600}>
-              <span className="inline-block px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
+              <span className="inline-block px-4 py-2 bg-accent/10 border border-accent/20 text-accent rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
                 What We Offer
               </span>
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={100} duration={700}>
-              <h2 className="text-4xl md:text-5xl font-bold text-primary-dark mb-4">
-                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500">Services</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400">Services</span>
               </h2>
             </ScrollReveal>
             <ScrollReveal animation="scale-up" delay={200} duration={600}>
-              <div className="w-20 h-1 bg-gradient-to-r from-accent to-cyan-500 mx-auto mb-6 rounded-full" />
+              <div className="w-20 h-1 bg-gradient-to-r from-accent to-cyan-400 mx-auto mb-6 rounded-full" />
             </ScrollReveal>
             <ScrollReveal animation="fade-up" delay={300} duration={700}>
-              <p className="text-steel-500 text-lg max-w-2xl mx-auto">
+              <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
                 Comprehensive industrial automation solutions tailored to optimize your
                 manufacturing processes and maximize operational efficiency.
               </p>
             </ScrollReveal>
           </div>
 
-          {/* Services - Horizontal scroll on mobile, Grid on desktop with Stagger Animation */}
+          {/* Services Grid / Scroll */}
           <div className="services-scroll-container">
             <StaggerContainer animation="fade-up" staggerDelay={120} className="services-scroll-wrapper">
               {servicesData.map((service) => (
@@ -255,16 +275,19 @@ const Services = () => {
             </ScrollReveal>
           </div>
 
-          {/* CTA with Scroll Reveal */}
+          {/* CTA */}
           <ScrollReveal animation="fade-up" delay={400} duration={700}>
-            <div className="text-center mt-16">
-              <p className="text-steel-500 mb-6">
+            <div className="text-center mt-12 sm:mt-16">
+              <p className="text-slate-400 mb-6">
                 Need a custom automation solution?
               </p>
               <a
                 href="#contact"
                 onClick={scrollToContact}
-                className="btn-primary inline-flex items-center gap-2 hover:scale-105 transition-transform group"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/90
+                         text-white font-semibold rounded-lg border border-accent/50
+                         hover:shadow-[0_0_30px_rgba(45,160,212,0.3)]
+                         transition-all duration-300 group"
               >
                 Discuss Your Project
                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

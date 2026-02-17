@@ -11,7 +11,7 @@ const { sendContactNotification, sendAutoReply } = require('../services/emailSer
  * @route POST /api/contact
  */
 const submitContact = async (req, res) => {
-  const { name, email, phone, company, subject, message } = req.body;
+  const { name, email, phone, countryCode, company, subject, message } = req.body;
 
   // Create submission record
   const submission = {

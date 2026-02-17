@@ -20,73 +20,42 @@ const Logo = ({ size = 'default', showText = true, transparent = false, classNam
 
   return (
     <div className={`group flex items-center gap-3 ${className}`}>
-      {/* Logo Image with Premium Animations */}
+      {/* Logo Icon Container */}
       <div className="relative">
-        {/* Outer glow ring on hover */}
-        <div className="absolute -inset-2 rounded-full bg-accent/0 group-hover:bg-accent/20
-                      blur-xl transition-all duration-700 opacity-0 group-hover:opacity-100" />
+        {/* Subtle glow on hover */}
+        <div className="absolute -inset-1 rounded-xl bg-accent/0 group-hover:bg-accent/15
+                      blur-lg transition-all duration-500 opacity-0 group-hover:opacity-100" />
 
-        {/* Rotating border ring */}
-        <div className="absolute -inset-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <div className="absolute inset-0 rounded-full border border-accent/30 animate-spin-slow"
-               style={{ animationDuration: '8s' }} />
-        </div>
-
-        {/* Pulse ring effect */}
-        <div className="absolute -inset-1 rounded-full border-2 border-accent/0
-                      group-hover:border-accent/40 group-hover:scale-125
-                      transition-all duration-700 opacity-0 group-hover:opacity-100" />
-
-        {/* Logo container with glass effect */}
+        {/* Logo container - rounded rectangle with dark bg and subtle border */}
         <div className={`relative transition-all duration-500
-                      ${transparent ? '' : 'p-1 rounded-full bg-white/5 border border-white/10 group-hover:bg-accent/10 group-hover:border-accent/30 group-hover:shadow-[0_0_30px_rgba(45,160,212,0.3)] backdrop-blur-sm'}`}>
+                      ${transparent ? '' : 'p-2 rounded-xl bg-slate-800/80 border border-slate-600/40 group-hover:border-accent/40 group-hover:shadow-[0_0_20px_rgba(45,160,212,0.15)]'}`}>
 
-          {/* The original logo image */}
           <img
             src={transparent ? logoTransparent : logoImage}
             alt="HG Automation"
             className={`${iconSize} w-auto relative z-10
-                       group-hover:scale-105 transition-all duration-500
-                       drop-shadow-[0_0_8px_rgba(45,160,212,0.3)]
-                       group-hover:drop-shadow-[0_0_15px_rgba(45,160,212,0.6)]`}
+                       group-hover:scale-105 transition-transform duration-500
+                       drop-shadow-[0_0_6px_rgba(45,160,212,0.3)]`}
           />
-        </div>
-
-        {/* Orbiting particle on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <div className="absolute -inset-2 animate-spin" style={{ animationDuration: '4s' }}>
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5
-                          bg-accent rounded-full shadow-[0_0_8px_rgba(45,160,212,0.8)]" />
-          </div>
         </div>
       </div>
 
-      {/* Company name with enhanced typography */}
+      {/* Company name */}
       {showText && (
         <div className="flex flex-col">
           {/* Main title */}
           <h1 className={`font-bold ${textSize} leading-tight tracking-wide flex items-center`}>
-            <span className="text-white font-extrabold
-                           group-hover:text-white transition-colors duration-300
-                           drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+            <span className="text-white font-extrabold">
               HG
             </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r
-                           from-accent via-cyan-400 to-accent
-                           font-bold ml-2 tracking-wider
-                           group-hover:from-cyan-300 group-hover:via-accent group-hover:to-cyan-300
-                           transition-all duration-500
-                           drop-shadow-[0_0_20px_rgba(45,160,212,0.3)]"
-                  style={{
-                    textShadow: '0 0 30px rgba(45, 160, 212, 0.3)',
-                    fontFamily: "'Segoe UI', 'Inter', system-ui, sans-serif"
-                  }}>
+            <span className="text-accent font-bold ml-2 tracking-wider"
+                  style={{ fontFamily: "'Segoe UI', 'Inter', system-ui, sans-serif" }}>
               AUTOMATION
             </span>
           </h1>
 
           {/* Tagline */}
-          <span className={`${taglineSize} text-white/50 tracking-[0.2em] uppercase font-medium
+          <span className={`${taglineSize} text-steel-400 tracking-[0.2em] uppercase font-medium
                          group-hover:text-accent/70 transition-colors duration-500 mt-0.5`}
                 style={{ fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
             Industrial Excellence
