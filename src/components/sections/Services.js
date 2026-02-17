@@ -72,7 +72,7 @@ const Services = () => {
       gallery: [
         { url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=500&fit=crop', caption: 'Vision System Integration' },
         { url: 'https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?w=800&h=500&fit=crop', caption: 'Camera Inspection System' },
-        { url: 'https://images.unsplash.com/photo-1632406898426-f0bdd7ce648f?w=800&h=500&fit=crop', caption: 'Quality Control Analysis' },
+        { url: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=500&fit=crop', caption: 'Quality Control Analysis' },
         { url: 'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=800&h=500&fit=crop', caption: 'Automated Defect Detection' },
       ],
       features: ['2D/3D Vision Systems', 'Quality Inspection', 'Barcode & OCR Reading', 'Dimensional Measurement', 'AI-Based Defect Detection'],
@@ -157,12 +157,9 @@ const Services = () => {
   return (
     <>
       <section id="services" className="py-10 sm:py-16 lg:py-24 relative overflow-hidden">
-        {/* Top divider: Hero(dark) → Services(light) */}
-        <div className="section-divider-top dark-to-light"></div>
-        <div className="section-glow-top"></div>
-        {/* Bottom divider: Services(light) → About(dark) */}
-        <div className="section-divider-bottom light-to-dark"></div>
-        <div className="section-glow-bottom"></div>
+        {/* Shadow dividers */}
+        <div className="shadow-divider-top" />
+        <div className="shadow-divider-bottom" />
 
         {/* Light sky-blue gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-blue-50"></div>

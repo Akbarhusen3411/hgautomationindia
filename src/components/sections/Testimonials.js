@@ -126,12 +126,9 @@ const Testimonials = () => {
       ref={sectionRef}
       className="py-12 sm:py-16 lg:py-24 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50"
     >
-      {/* Top divider: About(dark) → Testimonials(light) */}
-      <div className="section-divider-top dark-to-light" />
-      <div className="section-glow-top" />
-      {/* Bottom divider: Testimonials(light) → Contact(dark) */}
-      <div className="section-divider-bottom light-to-dark" />
-      <div className="section-glow-bottom" />
+      {/* Shadow dividers */}
+      <div className="shadow-divider-top" />
+      <div className="shadow-divider-bottom" />
 
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-10" style={{

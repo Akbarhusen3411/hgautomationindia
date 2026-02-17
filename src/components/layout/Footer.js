@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import Logo from '../common/Logo';
+import logoImage from '../../images/Logo.png';
 import useScrollAnimation from '../../hooks/useScrollAnimation';
 import { scrollToElement, smoothScrollTo } from '../../utils/smoothScroll';
 
@@ -46,9 +46,39 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-12">
           {/* Company Info */}
           <div className={`col-span-2 md:col-span-1 lg:col-span-1 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* Premium Logo with animations */}
+            {/* Logo matching header style */}
             <div className="mb-6">
-              <Logo size="small" showText={true} />
+              <a
+                href="#home"
+                onClick={(e) => { e.preventDefault(); smoothScrollTo(0); }}
+                className="group flex items-center gap-3"
+              >
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={logoImage}
+                    alt="HG Automation"
+                    className="h-10 sm:h-11 w-auto relative z-10
+                               group-hover:scale-105 transition-transform duration-500
+                               drop-shadow-[0_0_8px_rgba(45,160,212,0.4)]"
+                    style={{ pointerEvents: 'auto' }}
+                  />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-bold text-lg sm:text-xl leading-tight tracking-wide flex items-center">
+                    <span className="text-white font-extrabold">HG</span>
+                    <span className="text-accent font-bold ml-2 tracking-wider"
+                          style={{ fontFamily: "'Segoe UI', 'Inter', system-ui, sans-serif" }}>
+                      AUTOMATION
+                    </span>
+                  </span>
+                  <span className="text-[8px] sm:text-[9px] text-steel-400 tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium
+                                   group-hover:text-accent/70 transition-colors duration-500 mt-0.5
+                                   block"
+                        style={{ fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
+                    Precision Control,<br className="sm:hidden" /> Optimized Performance
+                  </span>
+                </div>
+              </a>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               Leading provider of industrial automation solutions. Transforming manufacturing

@@ -5,7 +5,6 @@
 
 const { contactSubmissions } = require('../data/services');
 const { sendContactNotification, sendAutoReply } = require('../services/emailService');
-const { isVerified, clearVerification } = require('../services/otpService');
 
 /**
  * Submit contact form
@@ -13,14 +12,6 @@ const { isVerified, clearVerification } = require('../services/otpService');
  */
 const submitContact = async (req, res) => {
   const { name, email, phone, countryCode, company, subject, message } = req.body;
-
-  // Server-side OTP verification enforcement
-  if (!isVerified('email', email)) {
-    return res.status(403).json({
-      success: false,
-      error: 'Email verification required. Please verify your email with OTP before submitting.'
-    });
-  }
 
   // Create submission record
   const submission = {
@@ -59,9 +50,6 @@ const submitContact = async (req, res) => {
   } catch (emailError) {
     console.error('Failed to send auto-reply:', emailError.message);
   }
-
-  // Clear OTP verification after successful submission to prevent replay
-  clearVerification('email', email);
 
   res.status(201).json({
     success: true,

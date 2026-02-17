@@ -117,7 +117,8 @@ const ServiceCard = ({ service, onClick }) => {
                  flex flex-col w-full
                  bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900
                  border border-slate-700/50 hover:border-accent/50
-                 shadow-lg hover:shadow-[0_20px_60px_rgba(45,160,212,0.2)]
+                 shadow-[0_4px_20px_rgba(0,0,0,0.25),0_8px_40px_rgba(0,0,0,0.15),0_0_0_1px_rgba(45,160,212,0.05)]
+                 hover:shadow-[0_20px_60px_rgba(45,160,212,0.2),0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(45,160,212,0.15)]
                  transition-all duration-700 ease-out
                  active:scale-[0.97] md:active:scale-100"
       style={{

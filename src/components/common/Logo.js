@@ -40,7 +40,7 @@ const Logo = ({ size = 'default', showText = true, transparent = false, classNam
 
       {/* Company name */}
       {showText && (
-        <div className="flex flex-col">
+        <div className="flex flex-col min-w-0">
           {/* Main title */}
           <h1 className={`font-bold ${textSize} leading-tight tracking-wide flex items-center`}>
             <span className="text-white font-extrabold">
@@ -55,9 +55,9 @@ const Logo = ({ size = 'default', showText = true, transparent = false, classNam
           {/* Tagline */}
           <span className={`${taglineSize} text-steel-400 tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium
                          group-hover:text-accent/70 transition-colors duration-500 mt-0.5
-                         block max-w-[180px] sm:max-w-none truncate`}
+                         block`}
                 style={{ fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
-            Precision Control, Optimized Performance
+            Precision Control,<br className="sm:hidden" /> Optimized Performance
           </span>
         </div>
       )}

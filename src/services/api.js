@@ -77,43 +77,6 @@ export const contactApi = {
 };
 
 /**
- * OTP API calls
- */
-export const otpApi = {
-  // Send email OTP
-  sendEmailOTP: (email) => {
-    return fetchApi('/otp/send-email', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    });
-  },
-
-  // Verify email OTP
-  verifyEmailOTP: (email, otp) => {
-    return fetchApi('/otp/verify-email', {
-      method: 'POST',
-      body: JSON.stringify({ email, otp }),
-    });
-  },
-
-  // Send phone OTP
-  sendPhoneOTP: (phone, dialCode) => {
-    return fetchApi('/otp/send-phone', {
-      method: 'POST',
-      body: JSON.stringify({ phone, dialCode }),
-    });
-  },
-
-  // Verify phone OTP
-  verifyPhoneOTP: (phone, dialCode, otp) => {
-    return fetchApi('/otp/verify-phone', {
-      method: 'POST',
-      body: JSON.stringify({ phone, dialCode, otp }),
-    });
-  },
-};
-
-/**
  * Health check
  */
 export const healthCheck = () => {
