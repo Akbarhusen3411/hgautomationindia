@@ -1,7 +1,5 @@
 # HG Automation - Industrial Automation Website
 
-**Live:** [https://akbarhusen3411.github.io/hgautomationindia](https://akbarhusen3411.github.io/hgautomationindia)
-
 A professional single-page website for **HG Automation India** — an industrial automation company specializing in PLC programming, SCADA systems, HMI development, control panels, and Industry 4.0 integration. Built with **React 19 + Tailwind CSS 3** (frontend) and **Node.js + Express** (backend).
 
 ---
