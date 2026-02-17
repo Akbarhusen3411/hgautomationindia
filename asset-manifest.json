@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/hgautomationindia/static/css/main.74c323fb.css",
-    "main.js": "/hgautomationindia/static/js/main.f8c2d855.js",
+    "main.css": "/hgautomationindia/static/css/main.48e81cc9.css",
+    "main.js": "/hgautomationindia/static/js/main.ab83a22e.js",
     "static/js/206.de829588.chunk.js": "/hgautomationindia/static/js/206.de829588.chunk.js",
     "static/media/Logo.png": "/hgautomationindia/static/media/Logo.d8c0fcfba2caf208f4b6.png",
     "static/media/Logo-transparent.png": "/hgautomationindia/static/media/Logo-transparent.a54981a572f234940d1d.png",
     "index.html": "/hgautomationindia/index.html"
   },
   "entrypoints": [
-    "static/css/main.74c323fb.css",
-    "static/js/main.f8c2d855.js"
+    "static/css/main.48e81cc9.css",
+    "static/js/main.ab83a22e.js"
   ]
 }
