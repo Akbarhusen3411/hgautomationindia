@@ -1,6 +1,6 @@
 {
   "name": "hg_automation_web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://Akbarhusen3411.github.io/hgautomationindia",
   "proxy": "http://localhost:5000",
@@ -32,13 +32,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build:secure": "react-scripts build && node scripts/obfuscate.js",
+    "build": "node scripts/set-version.js && react-scripts build",
+    "build:secure": "node scripts/set-version.js && react-scripts build && node scripts/obfuscate.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server/server.js",
     "dev": "concurrently \"npm run server\" \"npm start\"",
-    "predeploy": "npm run build",
+    "predeploy": "npm version patch --no-git-tag-version && npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

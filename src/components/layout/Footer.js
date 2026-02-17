@@ -193,6 +193,9 @@ const Footer = () => {
         <div className={`border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <p className="text-white/40 text-sm">
             &copy; {currentYear} HG Automation India. All rights reserved.
+            {process.env.REACT_APP_VERSION && (
+              <span className="ml-2 text-white/20 text-xs">v{process.env.REACT_APP_VERSION}</span>
+            )}
           </p>
 
           {/* Scroll to Top Button */}
