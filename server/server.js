@@ -23,7 +23,18 @@ app.set('trust proxy', 1);
 
 // Security middleware - Helmet for HTTP headers
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com", "https://www.google-analytics.com"],
+      imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://www.google-analytics.com"],
+      frameSrc: ["'self'", "https://www.google.com"],
+      connectSrc: ["'self'", "https://www.google-analytics.com", "https://wa.me"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'"],
+    },
+  },
 }));
 
 // Rate limiting - General API limit
@@ -58,11 +69,13 @@ app.use(generalLimiter);
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// Request logging middleware
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
-});
+// Request logging middleware (development only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+  });
+}
 
 // Rate limit for OTP endpoints
 const otpLimiter = rateLimit({

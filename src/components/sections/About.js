@@ -318,7 +318,7 @@ const About = () => {
                 ref={statsRef}
                 className="pt-6 sm:pt-8 border-t border-slate-700/50"
               >
-                <StaggerContainer animation="scale-up" staggerDelay={150} className="grid grid-cols-3 gap-3 sm:gap-4">
+                <StaggerContainer animation="scale-up" staggerDelay={150} className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                   {stats.map((stat, index) => (
                     <div
                       key={index}

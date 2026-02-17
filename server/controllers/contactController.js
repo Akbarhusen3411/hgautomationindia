@@ -5,6 +5,7 @@
 
 const { contactSubmissions } = require('../data/services');
 const { sendContactNotification, sendAutoReply } = require('../services/emailService');
+const { isVerified, clearVerification } = require('../services/otpService');
 
 /**
  * Submit contact form
@@ -12,6 +13,14 @@ const { sendContactNotification, sendAutoReply } = require('../services/emailSer
  */
 const submitContact = async (req, res) => {
   const { name, email, phone, countryCode, company, subject, message } = req.body;
+
+  // Server-side OTP verification enforcement
+  if (!isVerified('email', email)) {
+    return res.status(403).json({
+      success: false,
+      error: 'Email verification required. Please verify your email with OTP before submitting.'
+    });
+  }
 
   // Create submission record
   const submission = {
@@ -29,7 +38,11 @@ const submitContact = async (req, res) => {
   // Store in memory (simulated database)
   contactSubmissions.push(submission);
 
-  console.log('New contact submission:', submission);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('New contact submission:', submission);
+  } else {
+    console.log('New contact submission:', { id: submission.id, createdAt: submission.createdAt });
+  }
 
   // Send email notification to admin
   try {
@@ -47,6 +60,9 @@ const submitContact = async (req, res) => {
     console.error('Failed to send auto-reply:', emailError.message);
   }
 
+  // Clear OTP verification after successful submission to prevent replay
+  clearVerification('email', email);
+
   res.status(201).json({
     success: true,
     message: 'Thank you for your message. We will get back to you within 24 hours.',
@@ -57,49 +73,6 @@ const submitContact = async (req, res) => {
   });
 };
 
-/**
- * Get all contact submissions (admin endpoint)
- * @route GET /api/contact
- */
-const getAllSubmissions = (req, res) => {
-  res.json({
-    success: true,
-    count: contactSubmissions.length,
-    data: contactSubmissions
-  });
-};
-
-/**
- * Get submission by ID
- * @route GET /api/contact/:id
- */
-const getSubmissionById = (req, res) => {
-  const id = parseInt(req.params.id, 10);
-
-  if (isNaN(id)) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid submission ID format'
-    });
-  }
-
-  const submission = contactSubmissions.find(s => s.id === id);
-
-  if (!submission) {
-    return res.status(404).json({
-      success: false,
-      error: 'Submission not found'
-    });
-  }
-
-  res.json({
-    success: true,
-    data: submission
-  });
-};
-
 module.exports = {
-  submitContact,
-  getAllSubmissions,
-  getSubmissionById
+  submitContact
 };

@@ -61,7 +61,7 @@ const Hero = () => {
               optimize your manufacturing processes with precision and reliability.
             </p>
 
-            <div className="flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
               <button
                 onClick={() => scrollToSection('services')}
                 className="btn-primary flex items-center gap-2"
@@ -83,7 +83,7 @@ const Hero = () => {
             </div>
 
             {/* Stats with Animated Counters */}
-            <div ref={statsRef} className="grid grid-cols-3 gap-3 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
+            <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
               <div ref={yearsCounter.ref} className="group">
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-400 counter-animate group-hover:scale-110 transition-transform duration-300">
                   {yearsCounter.count}

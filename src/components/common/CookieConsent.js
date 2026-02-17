@@ -8,10 +8,21 @@ const CookieConsent = ({ onAccept, onDecline }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
     const consent = localStorage.getItem('hg_cookie_consent');
+    const consentDate = localStorage.getItem('hg_cookie_consent_date');
+
+    // Check if consent has expired (6 months)
+    if (consent && consentDate) {
+      const sixMonthsMs = 6 * 30 * 24 * 60 * 60 * 1000;
+      if (Date.now() - new Date(consentDate).getTime() > sixMonthsMs) {
+        localStorage.removeItem('hg_cookie_consent');
+        localStorage.removeItem('hg_cookie_consent_date');
+        const timer = setTimeout(() => setIsVisible(true), 1500);
+        return () => clearTimeout(timer);
+      }
+    }
+
     if (!consent) {
-      // Show banner after a short delay
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -58,7 +69,7 @@ const CookieConsent = ({ onAccept, onDecline }) => {
           <p>
             We use cookies to enhance your browsing experience, analyze site traffic, and
             personalize content. By clicking "Accept", you consent to our use of cookies.
-            Read our <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> to learn more.
+            Read our <a href="mailto:bakarali@hgautomationindia.com?subject=Privacy%20Policy%20Inquiry" rel="noopener noreferrer">Privacy Policy</a> to learn more.
           </p>
         </div>
         <div className="cookie-consent-buttons">

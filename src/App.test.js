@@ -5,6 +5,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
+// Mock IntersectionObserver for test environment
+global.IntersectionObserver = class {
+  constructor(callback) { this._callback = callback; }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 // Mock fetch for API calls
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -25,7 +33,7 @@ test('renders company name in header', () => {
 
 test('renders hero section with tagline', () => {
   render(<App />);
-  const heroTitle = screen.getByText(/Smart Automation/i);
+  const heroTitle = screen.getByText(/with Smart/i);
   expect(heroTitle).toBeInTheDocument();
 });
 
@@ -37,6 +45,6 @@ test('renders services section', () => {
 
 test('renders contact section', () => {
   render(<App />);
-  const contactTitle = screen.getByText(/Get In Touch/i);
+  const contactTitle = screen.getByText(/Let's Start a/i);
   expect(contactTitle).toBeInTheDocument();
 });

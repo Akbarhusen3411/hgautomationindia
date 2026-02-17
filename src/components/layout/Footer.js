@@ -33,14 +33,17 @@ const Footer = () => {
   };
 
   return (
-    <footer ref={footerRef} className="bg-primary-dark border-t border-white/10 relative overflow-hidden">
+    <footer ref={footerRef} className="bg-primary-dark relative overflow-hidden">
+      {/* Shadow divider */}
+      <div className="shadow-divider-footer" />
+
       {/* Background Effects */}
       <div className="absolute inset-0 bg-industrial-pattern opacity-5" />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-12">
           {/* Company Info */}
           <div className={`col-span-2 md:col-span-1 lg:col-span-1 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Premium Logo with animations */}

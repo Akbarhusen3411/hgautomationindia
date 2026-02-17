@@ -29,8 +29,8 @@ const obfuscatorConfig = {
   // Disable console output
   disableConsoleOutput: true,
 
-  // Domain lock - uncomment and add your domain to lock code to specific domain
-  // domainLock: ['yourdomain.com', 'www.yourdomain.com'],
+  // Domain lock - restricts code execution to specific domains
+  domainLock: ['hgautomationindia.com', 'www.hgautomationindia.com', 'akbarhusen3411.github.io'],
 
   // Identifier names generator
   identifierNamesGenerator: 'hexadecimal',

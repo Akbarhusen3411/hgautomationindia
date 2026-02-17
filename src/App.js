@@ -19,17 +19,21 @@ import Contact from './components/sections/Contact';
 
 // Utility components
 import SEO from './components/common/SEO';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import WhatsAppButton from './components/common/WhatsAppButton';
 import CookieConsent from './components/common/CookieConsent';
 import GoogleAnalytics from './components/common/GoogleAnalytics';
 import CustomScrollbar from './components/common/CustomScrollbar';
+import useSourceProtection from './hooks/useSourceProtection';
 
 // Google Analytics Measurement ID - Replace with your actual ID
 const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
 
 function App() {
+  useSourceProtection();
+
   return (
-    <>
+    <ErrorBoundary>
       {/* Skip to main content - Accessibility */}
       <a
         href="#main-content"
@@ -76,7 +80,7 @@ function App() {
         {/* Cookie Consent Banner */}
         <CookieConsent />
       </div>
-    </>
+    </ErrorBoundary>
   );
 }
 

@@ -353,7 +353,7 @@ const Contact = () => {
           </ScrollReveal>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12">
+        <div className="grid lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-12">
           {/* Contact Info — Left Column */}
           <div className="lg:col-span-2">
             <ScrollReveal animation="fade-right" duration={600}>
@@ -370,7 +370,7 @@ const Contact = () => {
                         <span className={`[&>svg]:w-4 [&>svg]:h-4 ${item.animClass}`}>{item.icon}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-[9px] text-accent uppercase tracking-wider font-semibold block leading-tight">
+                        <span className="text-[11px] text-accent uppercase tracking-wider font-semibold block leading-tight">
                           {item.label}
                         </span>
                         {item.href ? (
@@ -437,7 +437,7 @@ const Contact = () => {
               <div className="relative z-10">
                 {success ? (
                   /* ─── Success Thank You Screen ─── */
-                  <div className="flex flex-col items-center justify-center py-8 px-4 animate-fadeInUp">
+                  <div className="flex flex-col items-center justify-center py-8 px-4 animate-fadeInUp" role="status" aria-live="polite">
                     {/* Animated checkmark circle */}
                     <div className="relative mb-6">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30 contact-success-ring">
@@ -503,7 +503,7 @@ const Contact = () => {
 
                 {/* Error message */}
                 {error && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl animate-fadeInUp">
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl animate-fadeInUp" role="alert" aria-live="assertive">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">

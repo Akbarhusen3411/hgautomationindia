@@ -18,7 +18,6 @@
     "nodemailer": "^7.0.12",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -38,7 +37,7 @@
     "eject": "react-scripts eject",
     "server": "node server/server.js",
     "dev": "concurrently \"npm run server\" \"npm start\"",
-    "predeploy": "npm version patch --no-git-tag-version && npm run build",
+    "predeploy": "npm version patch --no-git-tag-version && npm run build:secure",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
